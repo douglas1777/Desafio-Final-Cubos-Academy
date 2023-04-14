@@ -133,7 +133,9 @@ Sem parâmetros de rota ou de query.O corpo (body) deverá possuir um objeto com
 Em caso de sucesso, deveremos enviar no corpo (body) da resposta o conteúdo do usuário cadastrado, incluindo seu respectivo id e excluindo a senha criptografada. Em caso de falha na validação, a resposta deverá possuir status code apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade mensagem que deverá possuir como valor um texto explicando o motivo da falha.
 
 ```javascript
-// 403 (Forbidden) = erro interno ao cadastrar este usuario
+// 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
+Já existe usuário cadastrado com o
+e-mail informado.
 ```
 
 **EQUISITOS OBRIGATÓRIOS**
@@ -146,17 +148,16 @@ Validar os campos obrigatórios:
 
 - senha;
 
-````
+- Validar se o e-mail informado já existe
 
-Validar se o e-mail informado já existe
-
-Não permitir que o mesmo e-mail seja usado por outro usuário,
-caso haja o mesmo email em outro usudario, retornar o status code adequado para o erro.
+- Não permitir que o mesmo e-mail seja usado por outro usuário,
+  caso haja o mesmo email em outro usudario, retornar o status code adequado para o erro.
 
 ```javascript
+// 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
 Já existe usuário cadastrado com o
 e-mail informado.
-````
+```
 
 Criptografar a senha antes de persistir no banco de dados com a biblioteca `bcrypt`
 
