@@ -8,6 +8,13 @@ const rotasUsuario = {
     const { nome, email, senha } = req.body;
     try {
       const criptografiSenha = await bcrypt.hash(senha, 10);
+      const consultaEmail = await knex("usuarios").where(email);
+      if (consultaEmail) {
+        return res.status(403).json({
+          mensagem: `Já existe usuário cadastrado com o
+        e-mail informado.`,
+        });
+      }
       const usuarioCadastrado = await knex("usuarios")
         .insert({ nome, email, criptografiSenha })
         .returning("*");

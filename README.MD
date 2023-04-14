@@ -77,7 +77,6 @@ Essa é a rota que será chamada quando o usuario logado quiser listar todas as 
 
 Sem parâmetros de rota ou de query.Não deverá possuir conteúdo no corpo (body) da requisição.
 
-
 **Exemplo de requisição**
 
 ```javascript
@@ -90,23 +89,23 @@ Sem parâmetros de rota ou de query.Não deverá possuir conteúdo no corpo (bod
 ```javascript
 // HTTP Status 200
 [
-{
-id: 1,
-descricao: "Informática",
-},
-{
-id: 2,
-descricao: "Mercado",
-},
-]
+  {
+    id: 1,
+    descricao: "Informática",
+  },
+  {
+    id: 2,
+    descricao: "Mercado",
+  },
+];
 ```
-<br>
+
 Se não encontrar nada no banco de dados, retornar um array vazio
-```
+
+```javascript
 // HTTP Status 200
-[]
+[];
 ```
-<br><br>
 
 **Cadastrar Usuário**
 
@@ -117,13 +116,12 @@ POST / usuario;
 Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
 
 **Métodos:**
-- Pegar e validar os dados q vem do body  **(nome, email, senha)**
-- Criptografar senha antes de inserir no banco com ****bcrypt.hash**
-- Verificar se o email existe.  Se existir, não será possível cadastrar
-- 
-  
-**Resposta:**
-Em caso de sucesso, deveremos enviar no corpo (body) da resposta o conteúdo do usuário cadastrado, incluindo seu respectivo id e excluindo a senha criptografada. Em caso de falha na validação, a resposta deverá possuir status code apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade mensagem que deverá possuir como valor um texto explicando o motivo da falha.
+
+- Pegar e validar os dados q vem do body **(nome, email, senha)**
+- Criptografar senha antes de inserir no banco com \***\*bcrypt.hash**
+- Verificar se o email existe. Se existir, não será possível cadastrar
+- **Resposta:**
+  Em caso de sucesso, deveremos enviar no corpo (body) da resposta o conteúdo do usuário cadastrado, incluindo seu respectivo id e excluindo a senha criptografada. Em caso de falha na validação, a resposta deverá possuir status code apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade mensagem que deverá possuir como valor um texto explicando o motivo da falha.
 
 Exemplo de requisição:
 
@@ -165,11 +163,12 @@ POST / login;
 Essa é a rota que permite o usuário cadastrado realizar o login no sistema.
 
 **Métodos**
+
 - Pegar e validar os dados q vem do body **(email,senha)**
-- Verificar se o email existe enviando o campo email para fazer a consulta no banco de dados e salvar o resultado em uma variável.  Se não existir, não será possível logar
+- Verificar se o email existe enviando o campo email para fazer a consulta no banco de dados e salvar o resultado em uma variável. Se não existir, não será possível logar
 - Validar email e senha usando a variável q verifica se tem email, para verificar se a senha desse email é igual a senha do **bcrypt**
-- Criar um token de autenticação com o **id** do usuário ****Usando JWT**
-- Responder com um objeto contendo as propriedades usuario: id, nome e email e token: ****************jwt.sign****************
+- Criar um token de autenticação com o **id** do usuário \***\*Usando JWT**
+- Responder com um objeto contendo as propriedades usuario: id, nome e email e token: **\*\***\*\*\*\***\*\***jwt.sign**\*\***\*\*\*\***\*\***
 
 **Exemplos de requisição**
 
@@ -195,7 +194,6 @@ POST / login;
 }
 ```
 
-
 ```
 // HTTP Status 401
 
@@ -206,23 +204,21 @@ POST / login;
 <br><br>
 
 > **REQUISITOS OBRIGATÓRIOS !!!**
->
 
 > ## **Todas as rotas abaixo necessitam de autenticação**
->
 
-> **Validar se o token foi enviado no header da requisição (Bearer Token)  ok**
-> 
+> **Validar se o token foi enviado no header da requisição (Bearer Token) ok**
 
-> **Verificar se o token é válido   ok**
+> **Verificar se o token é válido ok**
 >
-<br>
+> <br>
 
 **Detalhar usuário**
 
 ```javascript
 GET / usuario;
 ```
+
 <br>
 
 **Métodos**
@@ -250,6 +246,7 @@ Exemplos de resposta
 
 Para acessar este recurso um token de autenticação válido deve ser enviado.
 ```
+
 <br><br>
 
 **Atualizar usuário**
@@ -264,10 +261,9 @@ Essa é a rota que será chamada quando o usuário quiser realizar alterações 
 
 - Consultar usuário no banco de dados pelo id presente na propriedade req.user que será salvo no intermediário de autenticação
 - Pegar e validar os dados q vem do body (**nome, email, senha**)
-- Verificar se o email existe.  Se existir, não será possível atualizar
-- Criptografar senha antes de inserir no banco  com ****bcrypt.hash**
+- Verificar se o email existe. Se existir, não será possível atualizar
+- Criptografar senha antes de inserir no banco com \***\*bcrypt.hash**
 - • Atualizar as informações do usuário no banco de dados
-
 
 Exemplo de requisição:
 

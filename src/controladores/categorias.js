@@ -1,3 +1,4 @@
+
 const knex = require('../conexão')
 
 const listarCategorias = async (req, res) => {
@@ -12,3 +13,4 @@ const listarCategorias = async (req, res) => {
     }
 }
 module.exports = { listarCategorias }
+
