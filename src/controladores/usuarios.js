@@ -1,5 +1,6 @@
 const knex = require("../conexão");
 const bcrypt = require("bcrypt");
+const { log } = require("console");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -7,17 +8,22 @@ const rotasUsuario = {
   async cadastrarUsuario(req, res) {
     const { nome, email, senha } = req.body;
     try {
+      //const consulta = await knex("usuarios");
       const criptografiSenha = await bcrypt.hash(senha, 10);
-      const consultaEmail = await knex("usuarios").where(email);
+      const consultaEmail = await knex("usuarios")
+        .where({ email })
+        .returning("*");
+
+      console.log(consultaEmail);
       if (consultaEmail) {
         return res.status(403).json({
-          mensagem: `Já existe usuário cadastrado com o
-        e-mail informado.`,
+          mensagem: `Já existe usuário cadastrado com o e-mail informado.`,
         });
       }
       const usuarioCadastrado = await knex("usuarios")
-        .insert({ nome, email, criptografiSenha })
+        .insert({ nome, email, senha: criptografiSenha })
         .returning("*");
+      console.log(usuarioCadastrado);
 
       const usuarioSemSenha = {
         id: usuarioCadastrado.rows[0].id,
@@ -30,7 +36,7 @@ const rotasUsuario = {
       return res.status(500).json(error.message);
     }
   },
-  async loginUsuario(req, res) {
+  async login(req, res) {
     const { email, senha } = req.body;
 
     try {
