@@ -1,12 +1,11 @@
-const knex = require("../conexão");
+require("dotenv").config();
+const knex = require("../config/conexao");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const cadastrarUsuario = async (req, res) => {
   const { nome, email, senha } = req.body;
   try {
-    //const consulta = await knex("usuarios");
     const criptografiSenha = await bcrypt.hash(senha, 10);
     const consultaEmail = await knex("usuarios")
       .where({ email })
