@@ -18,5 +18,5 @@ const validarToken = (req, res, next) => {
 };
 
 module.exports = {
-  validarToken,
+  validarToken
 };

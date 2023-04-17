@@ -2,6 +2,8 @@ const {
   cadastroSchema,
   atualizacaoCadastroSchema,
 } = require("../validacoes/usuarioSchema");
+
+
 const validarCadastro = async (req, res, next) => {
   try {
     await cadastroSchema.validate(req.body);
@@ -10,6 +12,8 @@ const validarCadastro = async (req, res, next) => {
     return res.status(400).json({ mensagem: error.errors });
   }
 };
+
+
 const validaAtualizacaoCadastro = async (req, res, next) => {
   try {
     await atualizacaoCadastroSchema.validate(req.body);
@@ -18,4 +22,5 @@ const validaAtualizacaoCadastro = async (req, res, next) => {
     return res.status(400).json({ mensagem: error.errors });
   }
 };
+
 module.exports = { validarCadastro, validaAtualizacaoCadastro };

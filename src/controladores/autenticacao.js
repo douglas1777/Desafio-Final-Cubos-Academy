@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+
+
 const login = (req, res) => {
   try {
     let { id, nome, email } = req.usuario;
@@ -19,7 +21,7 @@ const login = (req, res) => {
     });
   } catch (erro) {
     return res.status(400).json({
-      mensagem: erro.message,
+      mensagem: erro.message
     });
   }
 };

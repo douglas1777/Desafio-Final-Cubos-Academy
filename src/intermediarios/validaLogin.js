@@ -7,7 +7,7 @@ const validaDados = async (req, res, next) => {
   const { email, senha } = req.body;
   try {
     const verificaUsuario = await knex("usuarios").where({ email }).first();
-    console.log(verificaUsuario);
+
     if (!verificaUsuario) {
       return res.status(401).json({
         mensagem: "Usuario não encontrado, verifique e tente novamente.",
@@ -24,7 +24,7 @@ const validaDados = async (req, res, next) => {
       { expiresIn: "24h" }
     );
     req.usuario = verificaUsuario;
-    console.log(req.usuario);
+
     next();
   } catch (error) {
     return res.status(500).json(error.message);
