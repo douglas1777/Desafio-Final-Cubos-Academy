@@ -20,7 +20,6 @@ const cadastrarUsuario = async (req, res) => {
     const usuarioCadastrado = await knex("usuarios")
       .insert({ nome, email, senha: criptografiSenha })
       .returning("*");
-    console.log(usuarioCadastrado);
 
     const usuarioSemSenha = {
       id: usuarioCadastrado[0].id,
@@ -33,4 +32,21 @@ const cadastrarUsuario = async (req, res) => {
   }
 };
 
-module.exports = cadastrarUsuario;
+const detalharUsuario = (req, res) => {
+  let { authorization } = req.headers
+  try {
+    const token = authorization.split(' ')[1]
+    const { iat, exp, ...usuario } = jwt.verify(token, process.env.SECRETJWT)
+
+    return res.status(200).json(usuario)
+  } catch (erro) {
+    return res.status(401).json({
+      mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado'
+    })
+  }
+};
+
+module.exports = {
+  cadastrarUsuario,
+  detalharUsuario,
+};
