@@ -1,8 +1,10 @@
-const express = require("express");
-const validaDados = require("../intermediarios/validaLogin");
-const login = require("../controladores/autenticacao");
-const router = express.Router();
+const { Router } = require("express");
 
-router.post("/", validaDados, login);
+const login = require("../controladores/autenticacao");
+const { loginSchema } = require("../intermediarios/validaUsuario");
+
+const router = Router();
+
+router.post("/", loginSchema, login);
 
 module.exports = router;
