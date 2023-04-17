@@ -1,5 +1,6 @@
 require("dotenv").config();
 const knex = require("../config/conexao");
+const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -33,20 +34,42 @@ const cadastrarUsuario = async (req, res) => {
 };
 
 const detalharUsuario = (req, res) => {
-  let { authorization } = req.headers
+  let { authorization } = req.headers;
   try {
-    const token = authorization.split(' ')[1]
-    const { iat, exp, ...usuario } = jwt.verify(token, process.env.SECRETJWT)
+    const token = authorization.split(" ")[1];
+    const { iat, exp, ...usuario } = jwt.verify(token, process.env.SECRETJWT);
 
-    return res.status(200).json(usuario)
+    return res.status(200).json(usuario);
   } catch (erro) {
     return res.status(401).json({
-      mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado'
-    })
+      mensagem:
+        "Para acessar este recurso um token de autenticação válido deve ser enviado",
+    });
   }
+};
+
+const editarUsuario = async (req, res) => {
+  const { email, senha } = req.body;
+
+  const usuarioExiste = await knex("usuarios").where({ id: req.usuario.id });
+
+  if (usuarioExiste && usuarioExiste.email !== email) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      mensagem: "O e-mail informado já está sendo utilizado por outro usuário.",
+    });
+  }
+
+  const senhaEncriptada = await bcrypt.hash(senha, 10);
+  await knex("usuarios").update({
+    ...req.body,
+    senha: senhaEncriptada,
+  });
+  
+  return res.status(StatusCodes.NO_CONTENT).send();
 };
 
 module.exports = {
   cadastrarUsuario,
   detalharUsuario,
+  editarUsuario,
 };
