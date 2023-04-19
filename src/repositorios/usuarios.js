@@ -12,5 +12,8 @@ const consultaUsuario = async (emailOuId) => {
 const salvarUsuario = async (usuario) => {
   return await knex("usuarios").insert(usuario).returning("*");
 };
+const atualizarUsuario = async (usuario, id) => {
+  return await knex("usuarios").update(usuario).where({ id: id });
+};
 
-module.exports = { consultaUsuario, salvarUsuario };
+module.exports = { consultaUsuario, salvarUsuario, atualizarUsuario };

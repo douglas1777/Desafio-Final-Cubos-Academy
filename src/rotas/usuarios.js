@@ -9,8 +9,6 @@ const { validarToken } = require("../intermediarios/autenticacao");
 const { validacaoCampos } = require("../schemas/schemasUsuario");
 const { usuariosControlador } = require("../controladores");
 
-
-
 const router = express.Router();
 
 router.post("/", validacaoCampos, usuariosControlador.cadastrarUsuario);
@@ -18,6 +16,6 @@ router.post("/", validacaoCampos, usuariosControlador.cadastrarUsuario);
 router.use(validarToken);
 
 router.get("/", usuariosControlador.detalharUsuario);
-router.post("/", validacaoCampos, usuariosControlador.editarUsuario);
+router.put("/", validacaoCampos, usuariosControlador.editarUsuario);
 
 module.exports = router;

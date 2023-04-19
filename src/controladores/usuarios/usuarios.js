@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const {
   consultaUsuario,
   salvarUsuario,
+  atualizarUsuario,
 } = require("../../repositorios/usuarios");
 const { erro_usuario_nao_encontrado } = require("../../utils/msgErros");
 
@@ -34,35 +35,50 @@ const cadastrarUsuario = async (req, res) => {
 };
 
 const detalharUsuario = async (req, res) => {
-  const id = req.usuario;
+  const id = req.usuarioId;
 
   const usuarioEncontrado = await consultaUsuario(id);
 
   if (!usuarioEncontrado) {
     return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado);
   }
+  const usuarioSemSenha = {
+    id,
+    nome: usuarioEncontrado.nome,
+    email: usuarioEncontrado.email,
+  };
 
-  return res.status(200).json(usuarioEncontrado);
+  return res.status(200).json(usuarioSemSenha);
 };
 
 const editarUsuario = async (req, res) => {
-  const { email, senha } = req.body;
+  const { nome, email, senha } = req.body;
+  const id = req.usuarioId;
 
-  const usuarioExiste = await knex("usuarios").where({ id: req.usuario.id });
+  const criptografiaSenha = await criptografar(senha);
 
-  if (usuarioExiste && usuarioExiste.email !== email) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      mensagem: "O e-mail informado já está sendo utilizado por outro usuário.",
+  const emailExiste = await consultaUsuario(email);
+
+  if (email !== emailExiste.email) {
+    return res.status(StatusCodes.FORBIDDEN).json({
+      mensagem: `Já existe usuário cadastrado com o e-mail informado.`,
     });
   }
+  const usuarioCadastrado = await atualizarUsuario(
+    {
+      nome,
+      email,
+      senha: criptografiaSenha,
+    },
+    id
+  );
 
-  const senhaEncriptada = await bcrypt.hash(senha, 10);
-  await knex("usuarios").update({
-    ...req.body,
-    senha: senhaEncriptada,
-  });
-
-  return res.status(StatusCodes.NO_CONTENT).send();
+  const usuarioSemSenha = {
+    id: usuarioCadastrado[0].id,
+    nome: usuarioCadastrado[0].nome,
+    email: usuarioCadastrado[0].email,
+  };
+  return res.status(201).json(usuarioSemSenha);
 };
 
 module.exports = {
