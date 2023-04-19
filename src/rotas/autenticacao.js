@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
-const login = require("../controladores/autenticacao");
-const { loginSchema } = require("../intermediarios/validaUsuario");
+const { login } = require("../controladores/usuarios/login");
+const { loginSchema } = require("../schemas/schemasUsuario");
 
 const router = Router();
 

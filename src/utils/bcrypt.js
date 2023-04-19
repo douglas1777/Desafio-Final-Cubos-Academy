@@ -1,5 +1,14 @@
 const bcrypt = require("bcrypt");
-const criptografarSenha = async (senha) => {
-  return bcrypt.hash(senha.toString(), 10);
+
+const criptografar = async (senha) => {
+  return await bcrypt.hash(senha.toString(), 10);
 };
-module.exports = { criptografarSenha };
+
+const compararBcrypt = async (senhaBody, senhaBancoDados) => {
+  return await bcrypt.compare(senhaBody.toString(), senhaBancoDados);
+};
+
+module.exports = {
+  criptografar,
+  compararBcrypt,
+};

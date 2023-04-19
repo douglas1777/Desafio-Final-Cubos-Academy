@@ -5,7 +5,6 @@ yup.setLocale(pt);
 const loginSchema = yup.object().shape({
   email: yup.string().email().required(),
   senha: yup.string().min(8).required(),
-  cpf: yup.number().min(11).required(),
 });
 
 module.exports = loginSchema;

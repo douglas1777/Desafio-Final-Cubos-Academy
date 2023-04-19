@@ -1,13 +1,16 @@
 const jwt = require("jsonwebtoken");
+
 const knex = require("../config/conexao");
 
-const consultaUsuario = async (email) => {
-  return await knex("usuarios").where({ email }).first();
+const consultaUsuario = async (emailOuId) => {
+  if (typeof emailOuId === "string") {
+    return await knex("usuarios").where({ email: emailOuId }).first();
+  }
+  return await knex("usuarios").where({ id: emailOuId }).first();
 };
-const cadastrarUsuario = async (usuario) => {
+
+const salvarUsuario = async (usuario) => {
   return await knex("usuarios").insert(usuario).returning("*");
 };
-module.exports = {
-  consultaUsuario,
-  cadastrarUsuario,
-};
+
+module.exports = { consultaUsuario, salvarUsuario };
