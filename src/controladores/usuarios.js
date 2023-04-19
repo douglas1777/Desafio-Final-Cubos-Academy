@@ -1,26 +1,23 @@
-require("dotenv").config();
-const knex = require("../config/conexao");
 const { StatusCodes } = require("http-status-codes");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const { consultaUsuario } = require("../repositorios/usuarios");
+const { criptografarSenha } = require("../utils/bcrypt");
 
 const cadastrarUsuario = async (req, res) => {
   const { nome, email, senha } = req.body;
   try {
-    const criptografiSenha = await bcrypt.hash(senha, 10);
-    const consultaEmail = await knex("usuarios")
-      .where({ email })
-      .first()
-      .returning("*");
+    const senhaEncriptada = await criptografarSenha(senha);
+    const consultaEmail = await consultaUsuario(email);
 
     if (consultaEmail) {
       return res.status(403).json({
         mensagem: `Já existe usuário cadastrado com o e-mail informado.`,
       });
     }
-    const usuarioCadastrado = await knex("usuarios")
-      .insert({ nome, email, senha: criptografiSenha })
-      .returning("*");
+    const usuarioCadastrado = await cadastrarUsuario({
+      nome,
+      email,
+      senha: senhaEncriptada,
+    });
 
     const usuarioSemSenha = {
       id: usuarioCadastrado[0].id,
@@ -64,7 +61,7 @@ const editarUsuario = async (req, res) => {
     ...req.body,
     senha: senhaEncriptada,
   });
-  
+
   return res.status(StatusCodes.NO_CONTENT).send();
 };
 
