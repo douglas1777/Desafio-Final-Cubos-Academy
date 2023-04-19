@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const knex = require("../config/conexao");
 
 const consultaUsuario = async (emailOuId) => {
