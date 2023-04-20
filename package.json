@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "eslint": "^8.38.0",
+    "nodemon": "^2.0.22",
+    "prettier": "2.8.7"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

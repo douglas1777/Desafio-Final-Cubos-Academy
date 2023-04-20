@@ -17,3 +17,7 @@ const atualizarUsuario = async (usuario, id) => {
 };
 
 module.exports = { consultaUsuario, salvarUsuario, atualizarUsuario };
+const atualizarUsuario = async (usuario, id) => {
+  return await knex("usuarios").update(usuario).where({ id });
+};
+

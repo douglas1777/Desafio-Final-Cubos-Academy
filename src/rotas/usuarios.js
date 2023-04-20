@@ -1,21 +1,17 @@
-const express = require("express");
+const { Router } = require("express");
 
-// const {
-//   cadastrarUsuario,
-//   detalharUsuario,
-//   editarUsuario,
-// } = require("../controladores/usuarios/usuarios");
 const { validarToken } = require("../intermediarios/autenticacao");
-const { validacaoCampos } = require("../schemas/schemasUsuario");
 const { usuariosControlador } = require("../controladores");
+const { schemas } = require("../schemas");
 
-const router = express.Router();
+const router = Router();
 
-router.post("/", validacaoCampos, usuariosControlador.cadastrarUsuario);
+router.post("/", schemas.validacaoCampos, usuariosControlador.cadastrarUsuario);
 //daqui pra baixo,precisa estar logado
 router.use(validarToken);
 
 router.get("/", usuariosControlador.detalharUsuario);
-router.put("/", validacaoCampos, usuariosControlador.editarUsuario);
+
+router.put("/", schemas.validacaoCampos, usuariosControlador.editarUsuario);
 
 module.exports = router;
