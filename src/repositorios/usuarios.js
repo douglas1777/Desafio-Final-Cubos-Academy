@@ -11,4 +11,8 @@ const salvarUsuario = async (usuario) => {
   return await knex("usuarios").insert(usuario).returning("*");
 };
 
-module.exports = { consultaUsuario, salvarUsuario };
+const atualizarUsuario = async (usuario, id) => {
+  return await knex("usuarios").update(usuario).where({ id });
+};
+
+module.exports = { consultaUsuario, salvarUsuario, atualizarUsuario };
