@@ -51,7 +51,7 @@ const editarUsuario = async (req, res) => {
 
   const emailExiste = await consultaUsuario(email)
 
-  if (emailExiste) {
+  if (emailExiste && (emailExiste.email !== email || emailExiste.id !== id)) {
     return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
   }
   const senhaEncriptada = await criptografar(senha)
