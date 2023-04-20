@@ -68,7 +68,7 @@ Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API
 Listar categorias\_
 
 ```javascript
-GET / categoria;
+GET / categorias;
 ```
 
 Essa é a rota que será chamada quando o usuario logado quiser listar todas as categorias cadastradas.
@@ -80,7 +80,7 @@ Sem parâmetros de rota ou de query.Não deverá possuir conteúdo no corpo (bod
 **Exemplo de requisição**
 
 ```javascript
-// GET /categoria
+// GET /categorias
 // Sem conteúdo no corpo (body) da requisição
 ```
 
@@ -110,7 +110,7 @@ Se não encontrar nada no banco de dados, retornar um array vazio
 **Cadastrar Usuário**
 
 ```javascript
-POST / usuario;
+POST / usuarios;
 ```
 
 Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
@@ -126,7 +126,7 @@ Essa é a rota que será utilizada para cadastrar um novo usuario no sistema.
 Exemplo de requisição:
 
 ```javascript
-// POST /usuario
+// POST /usuarios
 {
     "nome": "José",
 "email": "jose@email.com",
@@ -146,10 +146,9 @@ Exemplos de resposta:
 ```
 
 ```javascript
-// HTTP Status 401: o usuário não tem permissão de acessar o recurso solicitado
+// HTTP Status 404 (Bad Request)
 
-Já existe usuário cadastrado com o
-e-mail informado.
+"Já existe usuário cadastrado com o e-mail informado".
 ```
 
 <br><br>
@@ -194,10 +193,11 @@ POST / login;
 }
 ```
 
-```
-// HTTP Status 401
+```javascript
 
- "Usuário e/ou senha inválido(s).
+// HTTP Status 401(Unauthorized)
+
+ "Usuário e/ou senha inválido(s)".
 
 ```
 
@@ -216,7 +216,7 @@ POST / login;
 **Detalhar usuário**
 
 ```javascript
-GET / usuario;
+GET / usuarios;
 ```
 
 <br>
@@ -228,7 +228,7 @@ GET / usuario;
 Exemplo de requisição
 
 ```javascript
-// GET /usuario
+// GET /usuarios
 // Sem conteúdo no corpo (body) da requisição
 ```
 
@@ -237,14 +237,13 @@ Exemplos de resposta
 ```javascript
 // HTTP Status 200 (OK) = requisição bem sucedida
 {
-    "id": 1,
     "nome": "José",
     "email": "jose@email.com"
 }
 
-// HTTP Status 403 (Forbidden) = o usuário não tem permissão de acessar o recurso solicitado
+// HTTP Status 500 (INTERNAL_SERVER_ERROR) 
+"Erro interno do servidor"
 
-Para acessar este recurso um token de autenticação válido deve ser enviado.
 ```
 
 <br><br>
@@ -252,7 +251,7 @@ Para acessar este recurso um token de autenticação válido deve ser enviado.
 **Atualizar usuário**
 
 ```javascript
-PUT / usuario;
+PUT / usuarios;
 ```
 
 Essa é a rota que será chamada quando o usuário quiser realizar alterações no seu próprio usuário.
@@ -268,7 +267,7 @@ Essa é a rota que será chamada quando o usuário quiser realizar alterações 
 Exemplo de requisição:
 
 ```javascript
-// PUT /usuario
+// PUT /usuarios
 {
 "nome": "Pedro De Assis",
 "email": "pedrode_assis@email.com",
@@ -280,10 +279,9 @@ Exemplos de resposta
 
 ```javascript
 // HTTP Status 204
-Sem conteúdo no corpo (body) da resposta
+"Sem conteúdo no corpo (body) da resposta"
 
-// HTTP Status 403 (Forbidden) = o usuário não tem permissão de acessar o recurso
-//solicitado
-O e-mail informado já está sendo utilizado por outro usuário.
+// HTTP Status 400 (Bad Request)
+"O e-mail informado já está sendo utilizado por outro usuário."
 
 ```

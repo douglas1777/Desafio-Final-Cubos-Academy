@@ -6,7 +6,7 @@ yup.setLocale(pt);
 const validacaoCampos = validate((schemas) => {
   return schemas(
     yup.object({
-      nome: yup.string().strict(true).lowercase().trim().required(),
+      nome: yup.string().strict(true).trim().required(),
       email: yup.string().lowercase().trim().email().required(),
       senha: yup.string().strict(true).lowercase().trim().min(3).required()
     })
