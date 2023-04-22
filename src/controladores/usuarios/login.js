@@ -20,13 +20,11 @@ const login = async (req, res) => {
   if (!validarLogin) {
     return res.status(StatusCodes.UNAUTHORIZED).json(erro_login);
   }
-
   const token = criaToken(verificaUsuario.id);
 
   return res.json({
     usuario: { id, nome, email },
-    token
+    token,
   });
 };
-
 module.exports = { login };
