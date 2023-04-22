@@ -1,0 +1,279 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "PDV (Frente de Caixa)",
+        "description": "API que permite: Cadastrar, detalhar, editar usuário logado e listar categorias"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "paths": {
+        "/usuarios": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Cadastro de usuário",
+                "description": "",
+                "requestBody": {
+                    "description": "Dados do novo usuário",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Usuario"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Usuario"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Já existe usuário cadastrado com o e-mail informado"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Endpoint para realizar login na API",
+                "description": "Este endpoint é responsável por autenticar um usuário na API e retornar um token de acesso válido por um determinado período de tempo.",
+                "requestBody": {
+                    "description": "Objeto com as informações de login do usuário",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Os dados de login estão incorretos."
+                    },
+                    "401": {
+                        "description": "O usuário não está autorizado a acessar a API."
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Endpoint para obter os detalhes do usuário",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do usuário",
+                        "schema": {
+                            "$ref": "#/components/schemas/UsuarioDetalhes"
+                        }
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/categorias": {
+            "get": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Endpoint para listar todas as categorias de transações disponíveis na API",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorias de transações",
+                        "schema": {
+                            "$ref": "#/components/schemas/Categoria"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
+        },
+        "/usuario": {
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Endpoint para editar os detalhes do usuário",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Novos detalhes do usuário",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/components/schemas/UsuarioEdicao"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do usuário atualizados",
+                        "schema": {
+                            "$ref": "#/components/schemas/UsuarioDetalhes"
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Usuario": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "José"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jose@example.com"
+                    },
+                    "senha": {
+                        "type": "string",
+                        "example": "123456"
+                    }
+                }
+            },
+            "Login": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password123"
+                    }
+                }
+            },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string"
+                    },
+                    "expiresIn": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "UsuarioDetalhes": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "José"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "jose@mail.com"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua 1, nº 123"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(11) 1234-5678"
+                    }
+                }
+            },
+            "UsuarioEdicao": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "José"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua 1, nº 123"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(11) 1234-5678"
+                    }
+                }
+            },
+            "Categoria": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "01"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "example": "Informática"
+                    }
+                }
+            }
+        }
+    }
+}
