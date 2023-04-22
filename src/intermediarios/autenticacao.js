@@ -2,10 +2,14 @@ const { verificaToken } = require("../utils/jwt");
 
 const validarToken = (req, res, next) => {
   const { authorization } = req.headers;
+
+  if (!authorization) {
+    throw new Error("Um token deve ser enviado");
+  }
   
   try {
     const token = authorization.split(" ")[1];
-    
+
     const { id } = verificaToken(token, process.env.SECRETJWT);
 
     req.usuarioId = id;
@@ -18,5 +22,5 @@ const validarToken = (req, res, next) => {
 };
 
 module.exports = {
-  validarToken
+  validarToken,
 };

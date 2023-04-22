@@ -1,72 +1,68 @@
-const { criptografar } = require("../../utils/bcrypt");
-const { StatusCodes } = require("http-status-codes");
-const jwt = require("jsonwebtoken");
+const { criptografar } = require('../../utils/bcrypt')
+const { StatusCodes } = require('http-status-codes')
 const {
   consultaUsuario,
   salvarUsuario,
-} = require("../../repositorios/usuarios");
-const { erro_usuario_nao_encontrado } = require("../../utils/msgErros");
+  atualizarUsuario,
+} = require('../../repositorios/usuarios')
+const {
+  erro_usuario_nao_encontrado,
+  erro_usuario_existe,
+} = require('../../utils/msgErros')
 
 const cadastrarUsuario = async (req, res) => {
-  const { nome, email, senha } = req.body;
+  const { nome, email, senha } = req.body
 
-  const criptografiaSenha = await criptografar(senha);
+  const criptografiaSenha = await criptografar(senha)
 
-  const emailExiste = await consultaUsuario(email);
+  const emailExiste = await consultaUsuario(email)
 
   if (emailExiste) {
-    return res.status(StatusCodes.FORBIDDEN).json({
-      mensagem: `Já existe usuário cadastrado com o e-mail informado.`,
-    });
+    return res.status(StatusCodes.UNAUTHORIZED).json(erro_usuario_existe)
   }
-  const usuarioCadastrado = await salvarUsuario({
+  const [usuario] = await salvarUsuario({
     nome,
     email,
     senha: criptografiaSenha,
-  });
+  })
 
-  const usuarioSemSenha = {
-    id: usuarioCadastrado[0].id,
-    nome: usuarioCadastrado[0].nome,
-    email: usuarioCadastrado[0].email,
-  };
-  return res.status(201).json(usuarioSemSenha);
-};
+  return res
+    .status(StatusCodes.CREATED)
+    .json({ id: usuario.id, nome: usuario.nome, email: usuario.email })
+}
 
 const detalharUsuario = async (req, res) => {
-  const id = req.usuario;
+  const id = req.usuarioId
 
-  const usuarioEncontrado = await consultaUsuario(id);
+  const usuarioEncontrado = await consultaUsuario(id)
 
   if (!usuarioEncontrado) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado);
+    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
   }
+  // eslint-disable-next-line no-unused-vars
+  const { senha: _, id: Id, ...usuario } = usuarioEncontrado
 
-  return res.status(200).json(usuarioEncontrado);
-};
+  return res.status(200).json(usuario)
+}
 
 const editarUsuario = async (req, res) => {
-  const { email, senha } = req.body;
+  const { email, senha } = req.body
+  const id = req.usuarioId
 
-  const usuarioExiste = await knex("usuarios").where({ id: req.usuario.id });
+  const emailExiste = await consultaUsuario(email)
 
-  if (usuarioExiste && usuarioExiste.email !== email) {
-    return res.status(StatusCodes.NOT_FOUND).json({
-      mensagem: "O e-mail informado já está sendo utilizado por outro usuário.",
-    });
+  if (emailExiste) {
+    return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
   }
+  const senhaEncriptada = await criptografar(senha)
 
-  const senhaEncriptada = await bcrypt.hash(senha, 10);
-  await knex("usuarios").update({
-    ...req.body,
-    senha: senhaEncriptada,
-  });
+  await atualizarUsuario({ ...req.body, senha: senhaEncriptada }, id)
 
-  return res.status(StatusCodes.NO_CONTENT).send();
-};
+  return res.status(StatusCodes.NO_CONTENT).send()
+}
 
 module.exports = {
   cadastrarUsuario,
   detalharUsuario,
   editarUsuario,
-};
+}
