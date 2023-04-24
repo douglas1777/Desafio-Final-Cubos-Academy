@@ -16,7 +16,7 @@ const cadastrarUsuario = async (req, res) => {
   const criptografiaSenha = await criptografar(senha)
 
   const emailExiste = await consultaUsuario(email)
-  console.log(emailExiste)
+
   if (emailExiste) {
     return res.status(StatusCodes.UNAUTHORIZED).json(erro_usuario_existe)
   }
