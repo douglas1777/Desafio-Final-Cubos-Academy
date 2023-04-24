@@ -1,21 +1,19 @@
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
-const { erros } = require("./intermediarios/erros");
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./swagger.json')
 
-const rotasUsuarios = require("./rotas/usuarios.js");
-const rotasCategorias = require("./rotas/categorias");
-const rotasAutenticacao = require("./rotas/autenticacao");
+const { rotas } = require("./rotas");
 
+const PORT = process.env.PORT
 const app = express();
 
 app.use(express.json());
+app.use(rotas);
 
-app.use("/usuarios", rotasUsuarios);
-app.use("/categorias", rotasCategorias);
-app.use("/login", rotasAutenticacao);
-app.use(erros);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(process.env.PORT, () => {
-  console.log(`Online on Port ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Online em http://localhost:${PORT}`);
 });

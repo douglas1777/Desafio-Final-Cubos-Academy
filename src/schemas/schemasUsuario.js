@@ -6,9 +6,9 @@ yup.setLocale(pt);
 const validacaoCampos = validate((schemas) => {
   return schemas(
     yup.object({
-      nome: yup.string().required(),
-      email: yup.string().email().required(),
-      senha: yup.string().min(3).required(),
+      nome: yup.string().strict(true).trim().required(),
+      email: yup.string().lowercase().trim().email().required(),
+      senha: yup.string().strict(true).lowercase().trim().min(3).required()
     })
   );
 });
@@ -16,8 +16,8 @@ const validacaoCampos = validate((schemas) => {
 const loginSchema = validate((schemas) => {
   return schemas(
     yup.object().shape({
-      email: yup.string().email().required(),
-      senha: yup.string().min(3).required(),
+      email: yup.string().lowercase().trim().email().required(),
+      senha: yup.string().strict(true).lowercase().trim().min(3).required()
     })
   );
 });
