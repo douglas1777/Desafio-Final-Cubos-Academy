@@ -1,19 +1,21 @@
-const yup = require("yup");
-const { pt } = require("yup-locales");
-yup.setLocale(pt);
-const errosYup = {};
-const validate = (schemas) => async (req, res, next) => {
+const yup = require('yup')
+const { pt } = require('yup-locales')
+yup.setLocale(pt)
+
+const errosYup = {}
+
+const validate = (schemas) => (req, res, next) => {
+  const schema = schemas((schema) => schema)
   try {
-    const schema = schemas((schema) => schema);
-
-    await schema.validateSync(req.body, { abortEarly: false });
+    schema.validateSync(req.body, { abortEarly: false })
   } catch (error) {
+    console.log(error)
     error.inner.map((erro) => {
-      errosYup[erro.path] = erro.message;
-    });
-    return res.status(400).json({ mensagem: errosYup });
+      errosYup[erro.path] = erro.message
+    })
+    return res.status(400).json({ mensagem: errosYup })
   }
-  return next();
-};
+  next()
+}
 
-module.exports = validate;
+module.exports = validate
