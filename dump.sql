@@ -9,7 +9,7 @@ id serial primary key,
 
 create table categorias (
 id serial primary key,
-  descricao text not null
+  descricao text not null  
 );
 
 insert into categorias (descricao) values ('Informática');

@@ -19,7 +19,7 @@ const cadastrarCliente = async (req, res) => {
     return res.status(StatusCodes.UNAUTHORIZED).json(erro_cliente_existe)
   }
 
-  const [cliente] = salvarCliente({
+  const cliente = await salvarCliente({
     nome,
     email,
     cpf,
@@ -30,17 +30,9 @@ const cadastrarCliente = async (req, res) => {
     cidade,
     estado,
   })
-  return res.status(StatusCodes.CREATED).json({
-    id: cliente.id,
-    email: cliente.email,
-    cpf: cliente.cpf,
-    cep: cliente.cep,
-    rua: cliente.rua,
-    numero: cliente.numero,
-    bairro: cliente.bairro,
-    cidade: cliente.cidade,
-    estado: cliente.estado,
-  })
+  console.log(cliente)
+
+  return res.status(StatusCodes.CREATED).json(cliente[0])
 }
 
 module.exports = { cadastrarCliente }

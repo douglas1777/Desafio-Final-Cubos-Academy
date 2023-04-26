@@ -9,8 +9,8 @@ const validacaoCamposCliente = validate((schemas) => {
     yup.object({
       nome: yup.string().trim().required(),
       email: yup.string().email().lowercase().trim().required(),
-      cpf: yup.string().required(),
-      cep: yup.string().min(8),
+      cpf: yup.number().positive().min(11).required(),
+      cep: yup.number().min(8),
       rua: yup.string(),
       numero: yup.number().positive(),
       bairro: yup.string(),
