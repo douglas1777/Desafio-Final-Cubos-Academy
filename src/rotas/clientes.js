@@ -12,5 +12,10 @@ router.post(
   schemas.validacaoCamposCliente,
   clientesControlador.cadastrarCliente
 )
+router.put(
+  '/:id',
+  schemas.validacaoCamposCliente,
+  clientesControlador.editarCliente
+)
 
 module.exports = router
