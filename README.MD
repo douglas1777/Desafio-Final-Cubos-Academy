@@ -378,12 +378,45 @@ Exemplos de resposta:
  "mensagem": "Categoria inexistente"
 }
 ```
+#### Caso não seja lançado a descricao
 ```javascript
-// HTTP Status 400 / 401 / 403 / 404
+// HTTP Status 400 (Bad Request)
 {
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
-}
+ "mensagem": "Descricao é um campo obrigatório"          
+
+ }
+ 
 ```
+#### Caso não seja lançado quantidade_estoque
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Quantidade em estoque é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o valor
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Valor é um campo obrigatório"          
+
+ }
+ categoria_id
+
+ ```
+
+ #### Caso não seja lançado categoria_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id da categoria é um campo obrigatório"          
+
+ }
+ 
+
+ ```
 <br><br>
 
 ## **Editar dados do Produto**
@@ -444,11 +477,45 @@ Exemplos de resposta:
  "mensagem": "Categoria inexistente"
 }
 ```
+#### Caso não seja lançado a descricao
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
-}
+ "mensagem": "Descricao é um campo obrigatório"          
+
+ }
+ 
+```
+#### Caso não seja lançado quantidade_estoque
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Quantidade em estoque é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o valor
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Valor é um campo obrigatório"          
+
+ }
+ categoria_id
+
+ ```
+
+ #### Caso não seja lançado categoria_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id da categoria é um campo obrigatório"          
+
+ }
+
+
+ 
 ```
 <br><br>
 
@@ -737,14 +804,34 @@ Exemplos de resposta:
 
  "mensagem": "Já existe cliente cadastrado com o Cpf informado".
 ```
-
+#### Caso não seja lançado o nome
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
- "mensagem": "Todos os campos obrigatórios devem ser informados."
+ "mensagem": "Nome é um campo obrigatório"          
+
  }
  
 ```
+#### Caso não seja lançado o email
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Email é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o cpf
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Cpf é um campo obrigatório"          
+
+ }
+ 
+```
+
 <br><br>
 
 ## **Editar dados do Cliente**
@@ -811,12 +898,31 @@ Exemplos de resposta:
 "O cpf informado já está sendo utilizado por outro usuário."
 ```
 
+#### Caso não seja lançado o nome
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
- "mensagem": "Todos os campos obrigatórios devem ser informados."
+ "mensagem": "Nome é um campo obrigatório"          
+
  }
  
+```
+#### Caso não seja lançado o email
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "email é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o cpf
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "cpf é um campo obrigatório"          
+
+ }
 ```
 <br><br>
 
