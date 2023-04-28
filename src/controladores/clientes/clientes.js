@@ -58,7 +58,7 @@ const listarClientes = async (req, res) => {
 const detalharCliente = async (req, res) => {
   const { id } = req.params
   const cliente = await clienteDetalhado(Number(id))
-  return res.status(StatusCodes.OK).json(cliente)
+  return res.status(StatusCodes.OK).json(cliente[0])
 }
 
 module.exports = {
