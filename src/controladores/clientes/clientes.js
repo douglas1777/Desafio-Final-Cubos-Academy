@@ -6,6 +6,8 @@ const {
   salvarCliente,
   consultaCliente,
   atualizarCliente,
+  listaClientes,
+  clienteDetalhado,
 } = require('../../repositorios/clientes')
 
 const cadastrarCliente = async (req, res) => {
@@ -14,7 +16,6 @@ const cadastrarCliente = async (req, res) => {
   //TODO realizar apenas uma vez a busca e verificar as duas informações
 
   const emailExiste = await consultaCliente(email, cpf)
-  console.log(emailExiste)
 
   if (emailExiste) {
     return res.status(StatusCodes.UNAUTHORIZED).json(erro_cliente_existe)
@@ -50,5 +51,19 @@ const editarCliente = async (req, res) => {
 
   return res.status(StatusCodes.CREATED).json('Cliente atualizado com sucesso')
 }
+const listarClientes = async (req, res) => {
+  const lista = await listaClientes()
+  return res.status(StatusCodes.OK).json(lista)
+}
+const detalharCliente = async (req, res) => {
+  const { id } = req.params
+  const cliente = await clienteDetalhado(Number(id))
+  return res.status(StatusCodes.OK).json(cliente)
+}
 
-module.exports = { cadastrarCliente, editarCliente }
+module.exports = {
+  cadastrarCliente,
+  editarCliente,
+  listarClientes,
+  detalharCliente,
+}

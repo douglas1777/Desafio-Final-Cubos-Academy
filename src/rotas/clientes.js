@@ -17,5 +17,7 @@ router.put(
   schemas.validacaoCamposCliente,
   clientesControlador.editarCliente
 )
+router.get('/', clientesControlador.listarClientes)
+router.get('/:id', clientesControlador.detalharCliente)
 
 module.exports = router

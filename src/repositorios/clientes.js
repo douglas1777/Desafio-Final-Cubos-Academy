@@ -11,4 +11,16 @@ const salvarCliente = async (cliente) => {
 const atualizarCliente = async (cliente, id) => {
   return await knex('clientes').update(cliente).where(id)
 }
-module.exports = { consultaCliente, salvarCliente, atualizarCliente }
+const listaClientes = async () => {
+  return await knex('clientes')
+}
+const clienteDetalhado = async (id) => {
+  return await knex('clientes').where({ id })
+}
+module.exports = {
+  consultaCliente,
+  salvarCliente,
+  atualizarCliente,
+  listaClientes,
+  clienteDetalhado,
+}
