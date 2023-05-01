@@ -1,12 +1,14 @@
-const knex = require('knex')({
-    client: 'pg',
-    connection: {
-        host: process.env.HOST_BD,
-        port: process.env.PORT_BD,
-        user: process.env.USER_BD,
-        password: process.env.PASSWORD_BD,
-        database: process.env.DATABASE_BD
-    }
-});
+const { teste, producao } = require('./knex/variaveis')
 
-module.exports = knex;
+const pegaVariavel = () => {
+  if (process.env.NODE_ENV) {
+    return teste
+  }
+  return producao
+}
+
+const knex = require('knex')({
+  ...pegaVariavel(),
+})
+
+module.exports = knex

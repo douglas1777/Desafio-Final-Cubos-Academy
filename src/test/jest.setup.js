@@ -1,6 +1,15 @@
 const request = require('supertest')
 const { app } = require('../server')
+const knex = require('../config/conexao')
 
-const server = request(app)
+const testServer = request(app)
 
-module.exports = { server }
+beforeAll(async () => {
+  await knex('usuarios').del()
+})
+
+afterAll(async () => {
+  await knex.destroy()
+})
+
+module.exports = { testServer }
