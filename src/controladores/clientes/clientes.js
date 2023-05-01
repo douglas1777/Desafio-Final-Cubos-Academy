@@ -18,7 +18,7 @@ const cadastrarCliente = async (req, res) => {
   const emailExiste = await consultaCliente(email, cpf)
 
   if (emailExiste) {
-    return res.status(StatusCodes.UNAUTHORIZED).json(erro_cliente_existe)
+    return res.status(StatusCodes.BAD_REQUEST).json(erro_cliente_existe)
   }
 
   const cliente = await salvarCliente({
@@ -36,6 +36,8 @@ const cadastrarCliente = async (req, res) => {
 
   return res.status(StatusCodes.CREATED).json(cliente[0])
 }
+
+
 const editarCliente = async (req, res) => {
   const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } =
     req.body
@@ -49,12 +51,14 @@ const editarCliente = async (req, res) => {
 
   await atualizarCliente({ ...req.body }, { id })
 
-  return res.status(StatusCodes.CREATED).json('Cliente atualizado com sucesso')
+  return res.status(StatusCodes.NO_CONTENT).send()
 }
+
 const listarClientes = async (req, res) => {
   const lista = await listaClientes()
   return res.status(StatusCodes.OK).json(lista)
 }
+
 const detalharCliente = async (req, res) => {
   const { id } = req.params
   const cliente = await clienteDetalhado(Number(id))

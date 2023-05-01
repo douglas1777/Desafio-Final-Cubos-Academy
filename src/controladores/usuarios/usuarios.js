@@ -18,7 +18,7 @@ const cadastrarUsuario = async (req, res) => {
   const emailExiste = await consultaUsuario(email)
 
   if (emailExiste) {
-    return res.status(StatusCodes.UNAUTHORIZED).json(erro_usuario_existe)
+    return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
   }
   const [usuario] = await salvarUsuario({
     nome,
