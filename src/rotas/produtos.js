@@ -9,9 +9,9 @@ router.use(validarToken)
 
 router.get('/', produtosControlador.listarProduto)
 
-router.post('/', produtosControlador.cadastrarProduto)
+router.post('/', schemas.validacaoCamposProduto, produtosControlador.cadastrarProduto)
 
-router.put('/:id', produtosControlador.editarProduto)
+router.put('/:id', schemas.validacaoCamposProduto, produtosControlador.editarProduto)
 
 router.get('/:id', produtosControlador.detalharProduto)
 

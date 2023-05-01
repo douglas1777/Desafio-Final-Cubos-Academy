@@ -51,7 +51,7 @@ const editarCliente = async (req, res) => {
 
   await atualizarCliente({ ...req.body }, { id })
 
-  return res.status(StatusCodes.CREATED).json('Cliente atualizado com sucesso')
+  return res.status(StatusCodes.NO_CONTENT).send()
 }
 
 const listarClientes = async (req, res) => {
