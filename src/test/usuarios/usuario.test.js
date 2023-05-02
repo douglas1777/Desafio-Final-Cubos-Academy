@@ -7,19 +7,17 @@ const criaUsuarioPadrao = {
   email: 'bruno@gmail.com',
   senha: '123',
 }
-
-beforeAll(async () => {
-  const { body } = await testServer.post('/usuario').send(criaUsuarioPadrao)
-
-  const logarUsuario = await testServer
-    .post('/login')
-    .send({ email: body.email, senha: criaUsuarioPadrao.senha })
-  token = logarUsuario.body.token
-
-  expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
-})
-
 describe('Logar usuário', () => {
+  beforeAll(async () => {
+    const { body } = await testServer.post('/usuario').send(criaUsuarioPadrao)
+
+    const logarUsuario = await testServer
+      .post('/login')
+      .send({ email: body.email, senha: criaUsuarioPadrao.senha })
+    token = 'bearer ' + logarUsuario.body.token
+
+    expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
+  })
 
   it('deve recusar o login do usuário', async () => {
     const usuario = {
@@ -36,7 +34,6 @@ describe('Logar usuário', () => {
 })
 
 describe('Editar usuário', () => {
-
   it('deve recusar a edição de um usuário por outro email já existente', async () => {
     await testServer.post('/usuario').send({
       nome: 'bruno',
@@ -52,7 +49,7 @@ describe('Editar usuário', () => {
 
     const response = await testServer
       .put('/usuario')
-      .set('Authorization', 'bearer ' + token)
+      .set('Authorization', token)
       .send(usuario)
 
     expect(response.body).toHaveProperty('mensagem')
@@ -68,7 +65,7 @@ describe('Editar usuário', () => {
 
       const response = await testServer
         .put('/usuario')
-        .set('Authorization', 'bearer ' + token)
+        .set('Authorization', token)
         .send(usuario)
 
       expect(response.body).toHaveProperty('mensagem')
@@ -84,7 +81,7 @@ describe('Editar usuário', () => {
 
       const response = await testServer
         .put('/usuario')
-        .set('Authorization', 'bearer ' + token)
+        .set('Authorization', token)
         .send(usuario)
 
       expect(response.body).toHaveProperty('mensagem')
@@ -100,7 +97,7 @@ describe('Editar usuário', () => {
 
       const response = await testServer
         .put('/usuario')
-        .set('Authorization', 'bearer ' + token)
+        .set('Authorization', token)
         .send(usuario)
       expect(response.statusCode).toEqual(StatusCodes.NO_CONTENT)
       expect(response.body).toEqual({})
@@ -108,7 +105,6 @@ describe('Editar usuário', () => {
 })
 
 describe('Criar usuário', () => {
-
   it('deve recusar a criação de um usuário por falta de email e senha', async () => {
     const usuario = {
       nome: 'bruno',
@@ -143,11 +139,15 @@ describe('Criar usuário', () => {
       )
     }),
     it('deve recusar a criação de um usuário por tipo de email incorreto', async () => {
-      const response = await testServer.post('/usuario').send({...criaUsuarioPadrao, email: 'email'})
+      const response = await testServer
+        .post('/usuario')
+        .send({ ...criaUsuarioPadrao, email: 'email' })
 
       expect(response.body).toHaveProperty('mensagem')
       expect(response.body.mensagem).toHaveProperty('email')
-      expect(response.body.mensagem.email).toMatch('email deve ser um email válido')
+      expect(response.body.mensagem.email).toMatch(
+        'email deve ser um email válido'
+      )
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     }),
     it('deve criar um usuário', async () => {
