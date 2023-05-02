@@ -6,5 +6,7 @@ module.exports = {
     mensagem: 'Já existe usuário cadastrado com o e-mail informado',
   },
   erro_cliente_existe:
-    'Já existe cliente cadastrado com o e-mail ou CPF informado',
+    { mensagem: 'Já existe cliente cadastrado com o e-mail ou CPF informado' },
+  erro_categoria_nao_encontrada: { mensagem: 'categoria não encontrada' },
+  erro_produto_nao_encontrado: { mensagem: 'produto não encontrado' }
 }

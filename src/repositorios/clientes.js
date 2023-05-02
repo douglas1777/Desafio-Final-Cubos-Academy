@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken')
-
 const knex = require('../config/conexao')
 
 const consultaCliente = async (email, cpf) => {
