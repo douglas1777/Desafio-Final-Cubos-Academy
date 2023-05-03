@@ -9,7 +9,6 @@ const validate = (schemas) => (req, res, next) => {
   try {
     schema.validateSync(req.body, { abortEarly: false })
   } catch (error) {
-    console.log(error)
     error.inner.map((erro) => {
       errosYup[erro.path] = erro.message
     })

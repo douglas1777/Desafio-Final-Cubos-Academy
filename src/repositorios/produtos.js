@@ -1,41 +1,44 @@
-const { id } = require('yup-locales');
-const knex = require('../config/conexao');
+const knex = require('../config/conexao')
 
 const salvarProduto = async (produto) => {
-    return await knex('produtos').insert(produto).returning('*')
+  const [inserirProduto] = await knex('produtos').insert(produto).returning('*')
+  return inserirProduto
 }
 
-const veriricarCategoriaExiste = async (id) => {
-    return await knex('categorias').where({ id })
+const verificarCategoriaExiste = async (id) => {
+  return await knex('categorias').where({ id }).first()
+}
+
+const filtrarCategoriasExistem = async (id) => {
+  return await knex('categorias').whereIn('categoria_id', id).first()
 }
 
 const verificarProdutoExiste = async (id) => {
-    return await knex('produtos').where({ id })
+  return await knex('produtos').where({ id }).first()
 }
 
-const detalharprodutos = async (categoria_id) => {
+const detalharProdutos = async (categoria_id) => {
+  if (categoria_id) {
+    return await knex('produtos').whereIn('categoria_id', categoria_id)
+  }
 
-    if (categoria_id) {
-        return await knex('produtos').where({ categoria_id });
-    }
-
-    return await knex('produtos');
-};
+  return await knex('produtos')
+}
 
 const atualizarProduto = async (produto, id) => {
-    return await knex('produtos').update(produto).where(id).returning('*')
+  return await knex('produtos').update(produto).where({ id })
 }
 
 const deletarProduto = async (id) => {
-    return await knex('produtos').where({ id }).del()
+  return await knex('produtos').where({ id }).del()
 }
 
-
 module.exports = {
-    salvarProduto,
-    veriricarCategoriaExiste,
-    atualizarProduto,
-    detalharprodutos,
-    verificarProdutoExiste,
-    deletarProduto
+  salvarProduto,
+  verificarCategoriaExiste,
+  atualizarProduto,
+  detalharProdutos,
+  verificarProdutoExiste,
+  deletarProduto,
+  filtrarCategoriasExistem,
 }
