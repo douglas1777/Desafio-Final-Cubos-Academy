@@ -7,6 +7,7 @@ const testServer = request(app)
 beforeAll(async () => {
   await knex('usuarios').del()
   await knex('clientes').del()
+  await knex('produtos').del()
 })
 
 afterAll(async () => {

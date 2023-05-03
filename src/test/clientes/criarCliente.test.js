@@ -20,9 +20,9 @@ describe('Criar cliente', () => {
 
     token = 'bearer ' + logarUsuario.body.token
 
-    const { id } = await testServer.post('/cliente').set('Authorization', token).send(criaClientePadrao)
+    const response = await testServer.post('/cliente').set('Authorization', token).send(criaClientePadrao)
 
-    clienteId = id
+    clienteId = response.body.id
     expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
   })
 
@@ -56,7 +56,7 @@ describe('Criar cliente', () => {
       expect(response.body).toHaveProperty('mensagem')
       expect(response.body.mensagem).toHaveProperty('nome')
     }),
-    it('deve recusar a criação de um cliente por email repetido', async () => {
+    it('deve recusar a criação de um cliente por email e cpf repetido', async () => {
       const response = await testServer
         .post('/cliente')
         .set('Authorization', token)
@@ -65,9 +65,34 @@ describe('Criar cliente', () => {
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
       expect(response.body).toHaveProperty('mensagem')
       expect(response.body.mensagem).toMatch(
-        'Já existe cliente cadastrado com o e-mail ou CPF informado'
+        'Já existe cliente cadastrado com o cpf e email informado'
       )
-      // todo email infomado
+    }),
+
+    it('deve recusar a criação de um cliente cpf repetido', async () => {
+      const response = await testServer
+        .post('/cliente')
+        .set('Authorization', token)
+        .send({ ...criaClientePadrao, cpf: '12345548204' })
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+      expect(response.body).toHaveProperty('mensagem')
+      expect(response.body.mensagem).toMatch(
+        'Já existe cliente cadastrado com o email informado'
+      )
+    }),
+
+    it('deve recusar a criação de um cliente por email repetido', async () => {
+      const response = await testServer
+        .post('/cliente')
+        .set('Authorization', token)
+        .send({...criaClientePadrao, email: 'emailNovo@email'})
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
+      expect(response.body).toHaveProperty('mensagem')
+      expect(response.body.mensagem).toMatch(
+        'Já existe cliente cadastrado com o cpf informado'
+      )
     }),
 
     it('deve recusar a criação de um cliente por tipo de email incorreto', async () => {

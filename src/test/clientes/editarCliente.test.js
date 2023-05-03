@@ -30,7 +30,7 @@ describe('Editar cliente', () => {
     expect(response.statusCode).toEqual(StatusCodes.CREATED)
   })
 
-  it('deve recusar a edição de um cliente por outro email já existente', async () => {
+  it('deve recusar a edição de um cliente por email e cpf já existente', async () => {
     const { body } = await testServer
       .post(`/cliente`)
       .set('Authorization', token)
@@ -45,11 +45,11 @@ describe('Editar cliente', () => {
       .set('Authorization', token)
       .send(criaClientePadrao)
 
+    expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     expect(response.body).toHaveProperty('mensagem')
     expect(response.body.mensagem).toMatch(
-      'Já existe cliente cadastrado com o e-mail ou CPF informado'
+      'Já existe cliente cadastrado com o cpf e email informado'
     )
-    expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
   }),
     it('deve recusar a edição de um cliente por falta de email e cpf', async () => {
       const cliente = {
@@ -93,8 +93,7 @@ describe('Editar cliente', () => {
         .set('Authorization', token)
         .send(cliente)
 
-      expect(response.statusCode).toEqual(StatusCodes.CREATED)
-      // todo mudar statuscodes
-      // expect(response.body).toEqual({})
+      expect(response.statusCode).toEqual(StatusCodes.NO_CONTENT)
+      expect(response.body).toEqual({})
     })
 })
