@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken')
-
 const knex = require('../config/conexao')
 
 const consultaUsuario = async (emailOuId) => {
@@ -10,7 +8,8 @@ const consultaUsuario = async (emailOuId) => {
 }
 
 const salvarUsuario = async (usuario) => {
-  return await knex('usuarios').insert(usuario).returning('*')
+  const [salvarUsuario] = await knex('usuarios').insert(usuario).returning('*')
+  return salvarUsuario
 }
 const atualizarUsuario = async (usuario, id) => {
   return await knex('usuarios').update(usuario).where({ id: id })

@@ -7,11 +7,19 @@ const router = Router()
 
 router.use(validarToken)
 
-router.get('/', produtosControlador.listarProduto)
+router.get('/', produtosControlador.listarProdutos)
 
-router.post('/', schemas.validacaoCamposProduto, produtosControlador.cadastrarProduto)
+router.post(
+  '/',
+  schemas.validacaoCamposProduto,
+  produtosControlador.cadastrarProduto
+)
 
-router.put('/:id', schemas.validacaoCamposProduto, produtosControlador.editarProduto)
+router.put(
+  '/:id',
+  schemas.validacaoCamposProduto,
+  produtosControlador.editarProduto
+)
 
 router.get('/:id', produtosControlador.detalharProduto)
 

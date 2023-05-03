@@ -1,8 +1,6 @@
 const yup = require('yup')
-const { pt } = require('yup-locales')
+
 const validate = require('../intermediarios/validacaoYup')
-const { schemas } = require('.')
-yup.setLocale(pt)
 
 const validacaoCamposCliente = validate((schemas) => {
   return schemas(
