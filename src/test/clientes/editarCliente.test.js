@@ -81,6 +81,23 @@ describe('Editar cliente', () => {
       expect(response.body.mensagem).toHaveProperty('nome')
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     }),
+
+    it('deve editar um cliente com o mesmo email, que tenha o mesmo id', async () => {
+      const cliente = {
+        nome: 'joseEditado',
+        email: 'jose@gmail.com',
+        cpf: '12345668341',
+      }
+
+      const response = await testServer
+        .put(`/cliente/${clienteId}`)
+        .set('Authorization', token)
+        .send(cliente)
+
+      expect(response.statusCode).toEqual(StatusCodes.NO_CONTENT)
+      expect(response.body).toEqual({})
+    })
+    
     it('deve editar um cliente', async () => {
       const cliente = {
         nome: 'joseEditado',
