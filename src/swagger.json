@@ -81,7 +81,7 @@
                     "400": {
                         "description": "Os dados de login estão incorretos."
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado a acessar a API."
                     },
                     "500": {
@@ -109,7 +109,7 @@
                             "$ref": "#/components/schemas/UsuarioDetalhes"
                         }
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -137,7 +137,7 @@
                             "$ref": "#/components/schemas/Categoria"
                         }
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -179,7 +179,7 @@
                     "400": {
                         "description": "Dados inválidos"
                     },
-                    "403": {
+                    "401": {
                         "description": "Não autorizado"
                     },
                     "500": {
@@ -257,7 +257,7 @@
                     "201": {
                         "description": "Produto atualizado com sucesso."
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "400": {
@@ -309,7 +309,7 @@
                             "$ref": "#/components/schemas/Produto"
                         }
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -356,7 +356,7 @@
                     "400": {
                         "description": "Produto não encontrado."
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -397,7 +397,7 @@
                     "400": {
                         "description": "Produto não encontrado."
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -441,10 +441,10 @@
                     "400": {
                         "description": "Já existe usuário cadastrado com o e-mail informado"
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
-                    "401": {
+                    "404": {
                         "description": "Todos os campos são obrigatórios "
                     },
                     "500": {
@@ -518,7 +518,7 @@
                             }
                         }
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
@@ -565,7 +565,7 @@
                     "400": {
                         "description": "Cliente não encontrado."
                     },
-                    "403": {
+                    "401": {
                         "description": "O usuário não está autorizado "
                     },
                     "500": {
