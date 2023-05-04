@@ -110,7 +110,7 @@
                         }
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -138,7 +138,7 @@
                         }
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -180,7 +180,7 @@
                         "description": "Dados inválidos"
                     },
                     "401": {
-                        "description": "Não autorizado"
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -223,8 +223,8 @@
                     "400": {
                         "description": " Requisição inválida, algum campo obrigatório não foi informado."
                     },
-                    "403": {
-                        "description": "O usuário não está autorizado a acessar a API."
+                    "401": {
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -258,7 +258,7 @@
                         "description": "Produto atualizado com sucesso."
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "400": {
                         "description": "Todos os campos são obrigatórios "
@@ -310,7 +310,7 @@
                         }
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -357,7 +357,7 @@
                         "description": "Produto não encontrado."
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -398,7 +398,7 @@
                         "description": "Produto não encontrado."
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -442,7 +442,7 @@
                         "description": "Já existe usuário cadastrado com o e-mail informado"
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "404": {
                         "description": "Todos os campos são obrigatórios "
@@ -486,8 +486,8 @@
                     "404": {
                         "description": "Email ou Cpf ja existentes"
                     },
-                    "403": {
-                        "description": "Não autorizado"
+                    "401": {
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor"
@@ -519,7 +519,7 @@
                         }
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -566,7 +566,7 @@
                         "description": "Cliente não encontrado."
                     },
                     "401": {
-                        "description": "O usuário não está autorizado "
+                        "description": "Não  autorizado "
                     },
                     "500": {
                         "description": "Erro interno do servidor."
