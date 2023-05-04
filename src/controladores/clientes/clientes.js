@@ -35,7 +35,7 @@ const editarCliente = async (req, res) => {
 
   const emailOuCpfExiste = await repos.consultaCliente(email, cpf)
 
-  if (emailOuCpfExiste && emailOuCpfExiste.id !== id) {
+  if (emailOuCpfExiste && emailOuCpfExiste.id != id) {
     const dados = verificaDadosRepetidos(req.body, emailOuCpfExiste)
 
     return res.status(StatusCodes.BAD_REQUEST).json({

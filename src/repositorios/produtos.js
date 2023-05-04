@@ -10,7 +10,7 @@ const verificarCategoriaExiste = async (id) => {
 }
 
 const filtrarCategoriasExistem = async (id) => {
-  return await knex('categorias').whereIn('categoria_id', id).first()
+  return await knex('categorias').whereIn('id', id).first()
 }
 
 const verificarProdutoExiste = async (id) => {
