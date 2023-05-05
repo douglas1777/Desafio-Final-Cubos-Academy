@@ -1,26 +1,24 @@
-const { criptografar } = require('../../utils/bcrypt')
 const { StatusCodes } = require('http-status-codes')
-const {
-  consultaUsuario,
-  salvarUsuario,
-  atualizarUsuario,
-} = require('../../repositorios/usuarios')
+
+const { criptografar } = require('../../utils/bcrypt')
 const {
   erro_usuario_nao_encontrado,
   erro_usuario_existe,
 } = require('../../utils/msgErros')
+const { repos } = require('../../repositorios')
 
 const cadastrarUsuario = async (req, res) => {
   const { nome, email, senha } = req.body
 
+  const emailExiste = await repos.consultaUsuario(email)
+
   const criptografiaSenha = await criptografar(senha)
 
-  const emailExiste = await consultaUsuario(email)
-
   if (emailExiste) {
-    return res.status(StatusCodes.UNAUTHORIZED).json(erro_usuario_existe)
+    return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
   }
-  const [usuario] = await salvarUsuario({
+
+  const usuario = await repos.salvarUsuario({
     nome,
     email,
     senha: criptografiaSenha,
@@ -34,7 +32,7 @@ const cadastrarUsuario = async (req, res) => {
 const detalharUsuario = async (req, res) => {
   const id = req.usuarioId
 
-  const usuarioEncontrado = await consultaUsuario(id)
+  const usuarioEncontrado = await repos.consultaUsuario(id)
 
   if (!usuarioEncontrado) {
     return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
@@ -42,21 +40,27 @@ const detalharUsuario = async (req, res) => {
   // eslint-disable-next-line no-unused-vars
   const { senha: _, id: Id, ...usuario } = usuarioEncontrado
 
-  return res.status(200).json(usuario)
+  return res.json(usuario)
 }
 
 const editarUsuario = async (req, res) => {
   const { email, senha } = req.body
   const id = req.usuarioId
 
-  const emailExiste = await consultaUsuario(email)
+  const usuarioExiste = await repos.consultaUsuario(id)
+
+  if (!usuarioExiste) {
+    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
+  }
+
+  const emailExiste = await repos.consultaUsuario(email)
 
   if (emailExiste && (emailExiste.email !== email || emailExiste.id !== id)) {
     return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
   }
   const senhaEncriptada = await criptografar(senha)
 
-  await atualizarUsuario({ ...req.body, senha: senhaEncriptada }, id)
+  await repos.atualizarUsuario({ ...req.body, senha: senhaEncriptada }, id)
 
   return res.status(StatusCodes.NO_CONTENT).send()
 }
