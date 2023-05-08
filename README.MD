@@ -339,7 +339,6 @@ Essa é a rota que será utilizada para cadastrar um novo produto no sistema.
 
 **Lembre-se:** Deverá ser possível cadastrar **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
 
-  - Validar se existe produto para o id enviado como parâmetro na rota
 - Validar os campos obrigatórios que vem do body **(descricao, quantidade_estoque, valor,  categoria_id)**
 
 - **Resposta:**
@@ -378,12 +377,45 @@ Exemplos de resposta:
  "mensagem": "Categoria inexistente"
 }
 ```
+#### Caso não seja lançado a descricao
 ```javascript
-// HTTP Status 400 / 401 / 403 / 404
+// HTTP Status 400 (Bad Request)
 {
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
-}
+ "mensagem": "Descricao é um campo obrigatório"          
+
+ }
+ 
 ```
+#### Caso não seja lançado quantidade_estoque
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Quantidade em estoque é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o valor
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Valor é um campo obrigatório"          
+
+ }
+ categoria_id
+
+ ```
+
+ #### Caso não seja lançado categoria_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id da categoria é um campo obrigatório"          
+
+ }
+ 
+
+ ```
 <br><br>
 
 ## **Editar dados do Produto**
@@ -393,13 +425,12 @@ Exemplos de resposta:
 PUT /produto/:id
 ```
 
-Essa é a rota que permite atualizar as informações de um produto cadastrado no sistema.
+Essa é a rota que permite atualizar as informações de um produto cadastrado no sistema com base no id do produto informado no parâmetro da rota.
 
 **Métodos:**
 
 **Lembre-se:** Deverá ser possível atualizar o produto **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
 
-   -Validar se existe produto para o id enviado como parâmetro na rota.
   
    -Validar categoria informada na qual o produto será atualizado .
 
@@ -433,22 +464,56 @@ Exemplos de resposta:
 ```
 
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 404 (Not found)
 {
  "mensagem": "Produto inexistente"
 }
 ```
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 404 (Not found)
 {
  "mensagem": "Categoria inexistente"
 }
 ```
+#### Caso não seja lançado a descricao
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
-    "mensagem": "Todos os campos obrigatórios devem ser informados."
-}
+ "mensagem": "Descricao é um campo obrigatório"          
+
+ }
+ 
+```
+#### Caso não seja lançado quantidade_estoque
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Quantidade em estoque é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o valor
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Valor é um campo obrigatório"          
+
+ }
+ categoria_id
+
+ ```
+
+ #### Caso não seja lançado categoria_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id da categoria é um campo obrigatório"          
+
+ }
+
+
+ 
 ```
 <br><br>
 
@@ -458,7 +523,7 @@ Exemplos de resposta:
 GET / produto
 ```
 
-Essa é a rota que permite listar as informações de um produto cadastrado por categoria no sistema.
+Essa é a rota que permite listar as informações dos produtos cadastrados por categoria no sistema.
 
 **Métodos:**
 
@@ -737,14 +802,34 @@ Exemplos de resposta:
 
  "mensagem": "Já existe cliente cadastrado com o Cpf informado".
 ```
-
+#### Caso não seja lançado o nome
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
- "mensagem": "Todos os campos obrigatórios devem ser informados."
+ "mensagem": "Nome é um campo obrigatório"          
+
  }
  
 ```
+#### Caso não seja lançado o email
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Email é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o cpf
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Cpf é um campo obrigatório"          
+
+ }
+ 
+```
+
 <br><br>
 
 ## **Editar dados do Cliente**
@@ -811,12 +896,31 @@ Exemplos de resposta:
 "O cpf informado já está sendo utilizado por outro usuário."
 ```
 
+#### Caso não seja lançado o nome
 ```javascript
-// HTTP Status 404 (Bad Request)
+// HTTP Status 400 (Bad Request)
 {
- "mensagem": "Todos os campos obrigatórios devem ser informados."
+ "mensagem": "Nome é um campo obrigatório"          
+
  }
  
+```
+#### Caso não seja lançado o email
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "email é um campo obrigatório"          
+
+ }
+ ```
+ 
+#### Caso não seja lançado o cpf
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "cpf é um campo obrigatório"          
+
+ }
 ```
 <br><br>
 

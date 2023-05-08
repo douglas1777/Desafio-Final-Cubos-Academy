@@ -1,64 +1,62 @@
-const { criptografar } = require('../../utils/bcrypt')
 const { StatusCodes } = require('http-status-codes')
-const { erro_cliente_existe } = require('../../utils/msgErros')
 
 const {
-  salvarCliente,
-  consultaCliente,
-  atualizarCliente,
-  listaClientes,
-  clienteDetalhado,
-} = require('../../repositorios/clientes')
+  verificaDadosRepetidos,
+} = require('../../utils/verificaEmailCpfCliente')
+const { repos } = require('../../repositorios')
 
 const cadastrarCliente = async (req, res) => {
-  const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } =
-    req.body
-  //TODO realizar apenas uma vez a busca e verificar as duas informações
+  const { email, cpf } = req.body
 
-  const emailExiste = await consultaCliente(email, cpf)
+  const clienteExiste = await repos.consultaCliente(email, cpf)
 
-  if (emailExiste) {
-    return res.status(StatusCodes.UNAUTHORIZED).json(erro_cliente_existe)
+  if (clienteExiste) {
+    const dados = verificaDadosRepetidos(req.body, clienteExiste)
+
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      mensagem: `Já existe cliente cadastrado com o ${dados} informado`,
+    })
   }
 
-  const cliente = await salvarCliente({
-    nome,
-    email,
-    cpf,
-    cep,
-    rua,
-    numero,
-    bairro,
-    cidade,
-    estado,
-  })
-  console.log(cliente)
+  const cliente = await repos.salvarCliente(req.body)
 
-  return res.status(StatusCodes.CREATED).json(cliente[0])
+  return res.status(StatusCodes.CREATED).json(cliente)
 }
+
 const editarCliente = async (req, res) => {
-  const { nome, email, cpf, cep, rua, numero, bairro, cidade, estado } =
-    req.body
+  const { email, cpf } = req.body
   const { id } = req.params
 
-  const emailOuCpfExiste = await consultaCliente(email, cpf)
+  const clienteExiste = await repos.clienteDetalhado(id)
 
-  if (emailOuCpfExiste && emailOuCpfExiste.id !== Number(id)) {
-    return res.status(StatusCodes.BAD_REQUEST).json(erro_cliente_existe)
+  if (!clienteExiste) {
+    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
   }
 
-  await atualizarCliente({ ...req.body }, { id })
+  const emailOuCpfExiste = await repos.consultaCliente(email, cpf)
 
-  return res.status(StatusCodes.CREATED).json('Cliente atualizado com sucesso')
+  if (emailOuCpfExiste && emailOuCpfExiste.id != id) {
+    const dados = verificaDadosRepetidos(req.body, emailOuCpfExiste)
+
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      mensagem: `Já existe cliente cadastrado com o ${dados} informado`,
+    })
+  }
+
+  await repos.atualizarCliente(req.body, id)
+
+  return res.status(StatusCodes.NO_CONTENT).send()
 }
+
 const listarClientes = async (req, res) => {
-  const lista = await listaClientes()
-  return res.status(StatusCodes.OK).json(lista)
+  const clientes = await repos.listarClientes()
+  return res.status(StatusCodes.OK).json(clientes)
 }
+
 const detalharCliente = async (req, res) => {
   const { id } = req.params
-  const cliente = await clienteDetalhado(Number(id))
-  return res.status(StatusCodes.OK).json(cliente[0])
+  const cliente = await repos.clienteDetalhado(id)
+  return res.status(StatusCodes.OK).json(cliente)
 }
 
 module.exports = {
