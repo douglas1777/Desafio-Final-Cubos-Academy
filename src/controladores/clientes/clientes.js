@@ -4,6 +4,7 @@ const {
   verificaDadosRepetidos,
 } = require('../../utils/verificaEmailCpfCliente')
 const { repos } = require('../../repositorios')
+const { erro_categoria_nao_encontrada, erro_cliente_nao_encontrado } = require('../../utils/msgErros')
 
 const cadastrarCliente = async (req, res) => {
   const { email, cpf } = req.body
@@ -56,6 +57,10 @@ const listarClientes = async (req, res) => {
 const detalharCliente = async (req, res) => {
   const { id } = req.params
   const cliente = await repos.clienteDetalhado(id)
+
+  if (!cliente) {
+    return res.status(StatusCodes.NOT_FOUND).json(erro_cliente_nao_encontrado)
+  }
   return res.status(StatusCodes.OK).json(cliente)
 }
 

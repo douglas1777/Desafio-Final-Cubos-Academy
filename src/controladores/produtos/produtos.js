@@ -21,9 +21,11 @@ const cadastrarProduto = async (req, res) => {
 }
 
 const listarProdutos = async (req, res) => {
-  const arrayCategoria = req.query.filtro
+  let arrayCategoria = req.query.categoria_id
 
   if (arrayCategoria) {
+    if (typeof arrayCategoria === 'string') arrayCategoria = [arrayCategoria]
+
     const categoria = await repos.filtrarCategoriasExistem(arrayCategoria)
 
     if (!categoria) {
@@ -35,7 +37,7 @@ const listarProdutos = async (req, res) => {
 
   const produtos = await repos.detalharProdutos(arrayCategoria)
 
-  if (!produtos) {
+  if (!produtos[0]) {
     return res.status(StatusCodes.NOT_FOUND).json(erro_produto_nao_encontrado)
   }
 

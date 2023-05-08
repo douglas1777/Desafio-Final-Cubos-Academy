@@ -18,7 +18,7 @@ const verificarProdutoExiste = async (id) => {
 }
 
 const detalharProdutos = async (categoria_id) => {
-  if (categoria_id) {
+  if (categoria_id[0]) {
     return await knex('produtos').whereIn('categoria_id', categoria_id)
   }
 
