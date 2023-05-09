@@ -49,7 +49,7 @@ create table pedidos (
   cliente_id integer references clientes(id) not null,
   observacao text,
   valor_total  integer not null   
-)
+);
 
 create table pedido_produtos (
  id serial primary key, 
@@ -57,4 +57,7 @@ create table pedido_produtos (
   produto_id integer references produtos(id) not null,
   quantidade_produto integer not null,
   valor_produto integer not null
-)
+);
+
+alter table produtos add column imagem text; 
+
