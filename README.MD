@@ -552,7 +552,7 @@ Essa é a rota que permite listar as informações dos produtos cadastrados por 
 **Exemplo de requisição**
 
 ```javascript
-// GET /produto?filtro[]=1
+// GET /produto?categoria_id=1
 // Sem conteúdo no corpo (body) da requisição
 ```
 
@@ -1041,4 +1041,321 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
 }
 ```
 
+<br><br>
+
+#### **3° Sprint**
+
+<br><br>
+
+## **Banco de dados**
+
+Continuar a implementação do  Banco de Dados PostgreSQL chamado `pdv`.
+para persistir e manipular os dados de categorias, clientes, pedidos, produtos e usuários utilizados pela aplicação.
+
+- O campo id das tabelas no banco de dados deve ser auto incremento, chave primária e não deve permitir edição uma vez criado.
+- Qualquer valor monetário deverá ser representado em centavos (Ex.: R$ 10,00 reais = 1000)
+  Crie as seguintes tabelas e colunas abaixo:
+
+**ATENÇÃO! Os nomes das tabelas e das colunas a serem criados devem seguir exatamente os nomes listados abaixo.**
+
+```javascript
+
+* pedidos
+  -id
+  -cliente_id
+  -observacao
+  -valor_total
+  
+* pedido_produtos
+
+  -id
+  -pedido_id
+  -produto_id
+  -quantidade_produto
+  -valor_produto
+  
+```
+> ## ATENÇÃO: Todas as funcionalidades (endpoints) a seguir, a partir desse ponto, tambem  deverão exigir o token de autenticação do usuário logado, recebendo no header com o formato Bearer Token. Portanto, em cada funcionalidade será necessário validar o token informado.
+
+<br><br>
+
+**Cadastrar pedido**
+
+```javascript
+POST /pedido
+```
+
+Essa é a rota que será utilizada para cadastrar um novo pedido no sistema.  
+
+**Lembre-se:** - Deverá ser possível cadastrar um novo pedido **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
+               - Cada pedido deverá conter ao menos um produto vinculado.
+
+
+**REQUISITOS OBRIGATÓRIOS**
+
+  -   Validar os campos obrigatórios:
+
+    -   cliente_id
+    -   pedido_produtos
+        -   produto_id
+        -   quantidade_produto
+
+-   Validar se existe cliente para o id enviado no corpo (body) da requisição.
+-   Validar se existe produto para cada produto_id informado dentro do array enviado no corpo (body) da requisição.
+-   Validar se existe a quantidade em estoque de cada produto existente dentro do array, de acordo com a quantidade informada no corpo (body) da requisição.
+-   O pedido deverá ser cadastrado, apenas, se todos os produtos estiverem validados. 
+-   Enviar e-mail para o cliente notificando que o pedido foi efetuado com sucesso.  
+
+
+ **Resposta:**
+
+  Em caso de sucesso, deveremos enviar no corpo (body) da resposta um objeto com as propiedades do pedido cadastrado, incluindo seu respectivo id. 
+  Em caso de falha na validação, a resposta deverá possuir status code apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade mensagem que deverá possuir como valor um texto explicando o motivo da falha.
+ 
+
+Exemplo de requisição:
+
+```javascript
+// POST /pedido
+{
+    "cliente_id": 1,
+    "observacao": "Em caso de ausência recomendo deixar com algum vizinho",
+    "pedido_produtos": [
+        {
+            "produto_id": 1,
+            "quantidade_produto": 10
+        },
+        {
+            "produto_id": 2,
+            "quantidade_produto": 20
+        }
+    ]
+}
+```
+Exemplos de resposta:
+
+```javascript
+// HTTP Status 200 / 201 / 204
+{
+    "id":1
+    "cliente_id": 1,
+    "observacao": "Em caso de ausência recomendo deixar com algum vizinho",
+    "pedido_produtos": [
+        {
+            "produto_id": 1,
+            "quantidade_produto": 10
+        },
+        {
+            "produto_id": 2,
+            "quantidade_produto": 20
+        }
+    ]
+}
+```
+#### Caso usuario não esteja logado
+```javascript
+
+// HTTP Status 401 (Bad Request)
+{
+ "mensagem": "O usuário não está autenticado".
+}
+```
+#### Caso não seja lançado o cliente_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id do cliente é um campo obrigatório"          
+ }
+ 
+```
+#### Caso não seja lançado o produto_id
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "O id do produto é um campo obrigatório"          
+ }
+ 
+```
+#### Caso não seja lançado o quantidade_produto
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "A quantidade do  produto é um campo obrigatório"          
+
+ }
+ 
+```
+#### Caso não exista cliente_id enviado no corpo do (body) da requisição.
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Cliente não encontrado na banco de dados "          
+
+ }
+ 
+```
+#### Caso não exista exista produto_id informado dentro do array enviado no corpo (body) da requisição.
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "Produto não encontrado no banco de dados"          
+
+ }
+ ```
+ #### Caso não exista a quantidade em estoque de cada produto existente dentro do array, de acordo com a quantidade informada no corpo (body) da requisição.
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+ "mensagem": "A quantidade de produto solicitada está acima do volume em estoque"          
+
+ }
+ ```
+
+ <br><br>
+
+## **Listar Pedidos**
+
+```javascript
+GET / pedido
+```
+
+Essa é a rota que será chamada quando o usuário logado quiser listar todos os pedidos cadastrados.
+
+**Métodos:**
+
+**Lembre-se:** Deverá ser possível listar os pedidos **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
+
+  **Deveremos incluir um parâmetro do tipo query cliente_id para que seja possível consultar pedidos por clientes, de modo, que serão filtrados de acordo com o id de um cliente.**
+
+- Caso seja enviado o parâmetro do tipo query  **cliente_id** , filtrar os pedidos de acordo com o cliente, caso o id do cliente informada exista.
+- Caso não seja informado o parâmetro do tipo query **cliente_id** todos os pedidos cadastrados deverão ser retornados.
+
+
+-   **Requisição**  
+    Parâmetro opcional do tipo query **cliente_id**.
+    Não deverá possuir conteúdo no corpo (body) da requisição.
+
+-   **Resposta**  
+    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (pedidos) encontrados.  
+    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+
+
+     -   O parâmetro opcional do tipo query ( **cliente_id**), quando enviado, deverá ser sempre um array de objetos contendo a descrição de um ou mais pedidos.
+    -   O endpoint deverá responder com um array de todos os pedidos associados a cliente_id passadas no parâmetro query. 
+    
+    -Caso não seja informado o parâmetro do tipo query **cliente_id** todos os pedidos cadastrados deverão ser retornados.
+
+**Exemplo de requisição**
+
+```javascript
+// GET /produto?cliente_id=1
+// Sem conteúdo no corpo (body) da requisição
+```
+
+**Exemplos de resposta**
+
+```javascript
+// HTTP Status 200
+[
+    {
+        "pedido": {
+            "id": 1,
+            "valor_total": 230010,
+            "observacao": null,
+            "cliente_id": 1
+        },
+        "pedido_produtos": [
+            {
+                "id": 1,
+                "quantidade_produto": 1,
+                "valor_produto": 10,
+                "pedido_id": 1,
+                "produto_id": 1
+            },
+            {
+                "id": 2,
+                "quantidade_produto": 2,
+                "valor_produto": 230000,
+                "pedido_id": 1,
+                "produto_id": 2
+            }
+        ]
+    }
+]
+```
+
+
+#### Caso não encontrar nada no banco de dados, retornar um array vazio
+
+```javascript
+// HTTP Status 404
+[];
+```
+
+#### Caso seja informado o parâmetro do tipo query **cliente_id** inexistente.
+```javascript
+// HTTP Status 404
+
+{
+ "mensagem": "Cliente não encontrado no banco de dados"
+}
+```
+
+
+#### Caso não seja informado o parâmetro do tipo query.
+```javascript
+// HTTP Status 200
+[
+    {
+        "pedido": {
+            "id": 1,
+            "valor_total": 230010,
+            "observacao": null,
+            "cliente_id": 1
+        },
+        "pedido_produtos": [
+            {
+                "id": 1,
+                "quantidade_produto": 1,
+                "valor_produto": 10,
+                "pedido_id": 1,
+                "produto_id": 1
+            },
+            {
+                "id": 2,
+                "quantidade_produto": 2,
+                "valor_produto": 230000,
+                "pedido_id": 1,
+                "produto_id": 2
+            }
+        ]
+    }
+];
+[
+    {
+        "pedido": {
+            "id": 2,
+            "valor_total": 250010,
+            "observacao": "Horário de entrega das 9:00  às 17:00 hs",
+            "cliente_id": 1
+        },
+        "pedido_produtos": [
+            {
+                "id": 5,
+                "quantidade_produto": 1,
+                "valor_produto": 10,
+                "pedido_id": 2,
+                "produto_id": 13
+            },
+            {
+                "id": 2,
+                "quantidade_produto": 2,
+                "valor_produto": 230000,
+                "pedido_id": 2,
+                "produto_id": 23
+            }
+        ]
+    }
+]
+```
 <br><br>
