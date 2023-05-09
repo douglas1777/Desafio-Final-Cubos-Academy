@@ -1,4 +1,4 @@
-
+const path = require('path')
 const teste = {
   client: 'pg',
   connection: {
@@ -6,6 +6,12 @@ const teste = {
     user: process.env.DATABASE_USER_TEST,
     password: process.env.DATABASE_USER_PASSWORD,
     database: 'pdv',
+  },
+  migrations: {
+    directory: path.resolve(__dirname, '..', 'migrations'),
+  },
+  seeds: {
+    directory: '../seeds',
   },
 }
 

@@ -1,4 +1,4 @@
-const knex = require('../config/conexao')
+const knex = require('../database/config/conexao')
 
 const salvarProduto = async (produto) => {
   const [inserirProduto] = await knex('produtos').insert(produto).returning('*')

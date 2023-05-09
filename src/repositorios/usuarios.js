@@ -1,4 +1,4 @@
-const knex = require('../config/conexao')
+const knex = require('../database/config/conexao')
 
 const consultaUsuario = async (emailOuId) => {
   if (typeof emailOuId === 'string') {
