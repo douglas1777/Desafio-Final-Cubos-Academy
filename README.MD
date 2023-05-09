@@ -1077,6 +1077,8 @@ para persistir e manipular os dados de categorias, clientes, pedidos, produtos e
 ```
 > ## ATENÇÃO: Todas as funcionalidades (endpoints) a seguir, a partir desse ponto, tambem  deverão exigir o token de autenticação do usuário logado, recebendo no header com o formato Bearer Token. Portanto, em cada funcionalidade será necessário validar o token informado.
 
+> ## Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
+
 <br><br>
 
 **Cadastrar pedido**
@@ -1087,8 +1089,7 @@ POST /pedido
 
 Essa é a rota que será utilizada para cadastrar um novo pedido no sistema.  
 
-**Lembre-se:** - Deverá ser possível cadastrar um novo pedido **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
-               - Cada pedido deverá conter ao menos um produto vinculado.
+- Cada pedido deverá conter ao menos um produto vinculado.
 
 
 **REQUISITOS OBRIGATÓRIOS**
@@ -1110,8 +1111,7 @@ Essa é a rota que será utilizada para cadastrar um novo pedido no sistema.
  **Resposta:**
 
   Em caso de sucesso, deveremos enviar no corpo (body) da resposta um objeto com as propiedades do pedido cadastrado, incluindo seu respectivo id. 
-  Em caso de falha na validação, a resposta deverá possuir status code apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade mensagem que deverá possuir como valor um texto explicando o motivo da falha.
- 
+  
 
 Exemplo de requisição:
 
@@ -1135,27 +1135,18 @@ Exemplo de requisição:
 Exemplos de resposta:
 
 ```javascript
-// HTTP Status 200 / 201 / 204
+// HTTP Status 201 (Created) 
 {
     "id":1
     "cliente_id": 1,
     "observacao": "Em caso de ausência recomendo deixar com algum vizinho",
-    "pedido_produtos": [
-        {
-            "produto_id": 1,
-            "quantidade_produto": 10
-        },
-        {
-            "produto_id": 2,
-            "quantidade_produto": 20
-        }
-    ]
+    "valor_produto": 230000,
 }
 ```
 #### Caso usuario não esteja logado
 ```javascript
 
-// HTTP Status 401 (Bad Request)
+// HTTP Status 401 (Unauthorized)
 {
  "mensagem": "O usuário não está autenticado".
 }
@@ -1187,16 +1178,16 @@ Exemplos de resposta:
 ```
 #### Caso não exista cliente_id enviado no corpo do (body) da requisição.
 ```javascript
-// HTTP Status 400 (Bad Request)
+// HTTP Status 404 (Not Found)
 {
  "mensagem": "Cliente não encontrado na banco de dados "          
 
  }
  
 ```
-#### Caso não exista exista produto_id informado dentro do array enviado no corpo (body) da requisição.
+#### Caso não exista  produto_id informado dentro do array enviado no corpo (body) da requisição.
 ```javascript
-// HTTP Status 400 (Bad Request)
+// HTTP Status 404 (Not Found)
 {
  "mensagem": "Produto não encontrado no banco de dados"          
 
@@ -1223,8 +1214,6 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
 
 **Métodos:**
 
-**Lembre-se:** Deverá ser possível listar os pedidos **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
   **Deveremos incluir um parâmetro do tipo query cliente_id para que seja possível consultar pedidos por clientes, de modo, que serão filtrados de acordo com o id de um cliente.**
 
 - Caso seja enviado o parâmetro do tipo query  **cliente_id** , filtrar os pedidos de acordo com o cliente, caso o id do cliente informada exista.
@@ -1236,13 +1225,10 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
     Não deverá possuir conteúdo no corpo (body) da requisição.
 
 -   **Resposta**  
-    Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um array dos objetos (pedidos) encontrados.  
-    Em caso de **falha na validação**, a resposta deverá possuir **_status code_** apropriado, e em seu corpo (body) deverá possuir um objeto com uma propriedade **mensagem** que deverá possuir como valor um texto explicando o motivo da falha.
-
-
-     -   O parâmetro opcional do tipo query ( **cliente_id**), quando enviado, deverá ser sempre um array de objetos contendo a descrição de um ou mais pedidos.
-    -   O endpoint deverá responder com um array de todos os pedidos associados a cliente_id passadas no parâmetro query. 
+      
     
+        -   O parâmetro opcional do tipo query ( **cliente_id**), quando enviado, deverá rertornar sempre um array de objetos contendo a descrição de um ou mais pedidos do cliente_id informado.
+        
     -Caso não seja informado o parâmetro do tipo query **cliente_id** todos os pedidos cadastrados deverão ser retornados.
 
 **Exemplo de requisição**
@@ -1283,18 +1269,25 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
     }
 ]
 ```
+#### Caso usuario não esteja logado
+```javascript
 
+// HTTP Status 401 (Unauthorized)
+{
+ "mensagem": "O usuário não está autenticado".
+}
+```
 
 #### Caso não encontrar nada no banco de dados, retornar um array vazio
 
 ```javascript
-// HTTP Status 404
+// HTTP Status 200 (ok)
 [];
 ```
 
 #### Caso seja informado o parâmetro do tipo query **cliente_id** inexistente.
 ```javascript
-// HTTP Status 404
+//HTTP Status 404 (Not Found)
 
 {
  "mensagem": "Cliente não encontrado no banco de dados"
@@ -1304,7 +1297,7 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
 
 #### Caso não seja informado o parâmetro do tipo query.
 ```javascript
-// HTTP Status 200
+// HTTP Status 200 (ok)
 [
     {
         "pedido": {
@@ -1330,8 +1323,8 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
             }
         ]
     }
-];
-[
+
+
     {
         "pedido": {
             "id": 2,
