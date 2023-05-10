@@ -1,22 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 const { testServer } = require('../jest.setup')
 
-const criaUsuarioPadrao = {
-  nome: 'bruno',
-  email: 'bruno@gmail.com',
-  senha: '123',
-}
-
 describe('Criar usuário', () => {
-
-  beforeAll(async () => {
-    const { statusCode } = await testServer
-      .post('/usuario')
-      .send(criaUsuarioPadrao)
-  
-    expect(statusCode).toEqual(StatusCodes.CREATED)
-  })
-
   it('deve recusar a criação de um usuário por falta de email e senha', async () => {
     const usuario = {
       nome: 'bruno',
@@ -29,7 +14,6 @@ describe('Criar usuário', () => {
     expect(response.body.mensagem).toHaveProperty('senha')
     expect(response.body.mensagem).toHaveProperty('email')
   }),
-
     it('deve recusar a criação de um usuário por falta de nome', async () => {
       const usuario = {
         email: 'bruno@gmail.com',
@@ -43,6 +27,11 @@ describe('Criar usuário', () => {
       expect(response.body.mensagem).toHaveProperty('nome')
     }),
     it('deve recusar a criação de um usuário por email repetido', async () => {
+      const criaUsuarioPadrao = {
+        nome: 'bruno',
+        email: 'bruno@gmail.com',
+        senha: '123',
+      }
       const response = await testServer.post('/usuario').send(criaUsuarioPadrao)
 
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
@@ -51,11 +40,10 @@ describe('Criar usuário', () => {
         'Já existe usuário cadastrado com o e-mail informado'
       )
     }),
-
     it('deve recusar a criação de um usuário por tipo de email incorreto', async () => {
       const response = await testServer
         .post('/usuario')
-        .send({ ...criaUsuarioPadrao, email: 'email' })
+        .send({ nome: 'teste', email: 'email', senha: 'senha' })
 
       expect(response.body).toHaveProperty('mensagem')
       expect(response.body.mensagem).toHaveProperty('email')
@@ -64,7 +52,6 @@ describe('Criar usuário', () => {
       )
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     }),
-    
     it('deve criar um usuário', async () => {
       const usuario = {
         nome: 'bruno',

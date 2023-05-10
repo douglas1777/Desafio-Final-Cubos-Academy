@@ -1,10 +1,7 @@
 const { StatusCodes } = require('http-status-codes')
 
 const { criptografar } = require('../../utils/bcrypt')
-const {
-  erro_usuario_nao_encontrado,
-  erro_usuario_existe,
-} = require('../../utils/msgErros')
+const msg = require('../../utils/msgErros')
 const { repos } = require('../../repositorios')
 
 const cadastrarUsuario = async (req, res) => {
@@ -15,7 +12,7 @@ const cadastrarUsuario = async (req, res) => {
   const criptografiaSenha = await criptografar(senha)
 
   if (emailExiste) {
-    return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
+    return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_usuario_existe)
   }
 
   const usuario = await repos.salvarUsuario({
@@ -35,7 +32,7 @@ const detalharUsuario = async (req, res) => {
   const usuarioEncontrado = await repos.consultaUsuario(id)
 
   if (!usuarioEncontrado) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_usuario_nao_encontrado)
   }
   // eslint-disable-next-line no-unused-vars
   const { senha: _, id: Id, ...usuario } = usuarioEncontrado
@@ -50,13 +47,13 @@ const editarUsuario = async (req, res) => {
   const usuarioExiste = await repos.consultaUsuario(id)
 
   if (!usuarioExiste) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_usuario_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_usuario_nao_encontrado)
   }
 
   const emailExiste = await repos.consultaUsuario(email)
 
   if (emailExiste && (emailExiste.email !== email || emailExiste.id !== id)) {
-    return res.status(StatusCodes.BAD_REQUEST).json(erro_usuario_existe)
+    return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_usuario_existe)
   }
   const senhaEncriptada = await criptografar(senha)
 

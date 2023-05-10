@@ -3,7 +3,7 @@ const { testServer } = require('../jest.setup')
 
 let token
 let clienteId
-const criaClientePadrao = {
+const criaClienteRepetido = {
   nome: 'José',
   email: 'jose@email.com',
   cpf: '12345668804',
@@ -20,30 +20,14 @@ describe('Editar cliente', () => {
       .send({ email: body.email, senha: '123' })
 
     token = 'bearer ' + logarUsuario.body.token
-
-    const response = await testServer
-      .post(`/cliente`)
-      .set('Authorization', token)
-      .send(criaClientePadrao)
-
-    clienteId = response.body.id
-    expect(response.statusCode).toEqual(StatusCodes.CREATED)
   })
 
   it('deve recusar a edição de um cliente por email e cpf já existente', async () => {
-    const { body } = await testServer
-      .post(`/cliente`)
-      .set('Authorization', token)
-      .send({
-        nome: 'jose',
-        email: 'joseeditado@gmail.com',
-        cpf: '12345668811',
-      })
 
     const response = await testServer
-      .put(`/cliente/${body.id}`)
+      .put(`/cliente/${2}`)
       .set('Authorization', token)
-      .send(criaClientePadrao)
+      .send(criaClienteRepetido)
 
     expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
     expect(response.body).toHaveProperty('mensagem')
@@ -57,7 +41,7 @@ describe('Editar cliente', () => {
       }
 
       const response = await testServer
-        .put(`/cliente/${clienteId}`)
+        .put(`/cliente/${1}`)
         .set('Authorization', token)
         .send(cliente)
 
@@ -73,7 +57,7 @@ describe('Editar cliente', () => {
       }
 
       const response = await testServer
-        .put(`/cliente/${clienteId}`)
+        .put(`/cliente/${1}`)
         .set('Authorization', token)
         .send(cliente)
 
@@ -90,7 +74,7 @@ describe('Editar cliente', () => {
       }
 
       const response = await testServer
-        .put(`/cliente/${clienteId}`)
+        .put(`/cliente/${1}`)
         .set('Authorization', token)
         .send(cliente)
 
@@ -106,7 +90,7 @@ describe('Editar cliente', () => {
       }
 
       const response = await testServer
-        .put(`/cliente/${clienteId}`)
+        .put(`/cliente/${1}`)
         .set('Authorization', token)
         .send(cliente)
 

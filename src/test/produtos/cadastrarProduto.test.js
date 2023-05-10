@@ -20,18 +20,9 @@ describe('Cadastrar produto', () => {
       .send({ email: body.email, senha: '123' })
 
     token = 'bearer ' + logarUsuario.body.token
-
-    const response = await testServer
-      .post('/produto')
-      .set('Authorization', token)
-      .send(criaProdutoPadrao)
-
-    produtoId = response.body.id
-    expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
   })
 
   it('deve recusar a criação de um produto por inexistência da categoria do id informado', async () => {
-
     const response = await testServer
       .post('/produto')
       .set('Authorization', token)
@@ -44,7 +35,7 @@ describe('Cadastrar produto', () => {
 
     expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
     expect(response.body).toHaveProperty('mensagem')
-    expect(response.body.mensagem).toMatch('categoria não encontrada')
+    expect(response.body.mensagem).toMatch('Categoria não encontrada')
   })
 
   it('deve recusar a criação de um produto por falta de descricao', async () => {
@@ -99,20 +90,20 @@ describe('Cadastrar produto', () => {
     expect(response.body.mensagem).toHaveProperty('quantidade_estoque')
   })
 
-      it('deve criar um produto', async () => {
-        const produto = {
-          descricao: 'Mouse',
-          quantidade_estoque: '2',
-          valor: '1000',
-          categoria_id: '3',
-        }
+  it('deve criar um produto', async () => {
+    const produto = {
+      descricao: 'Mouse',
+      quantidade_estoque: '2',
+      valor: '1000',
+      categoria_id: '3',
+    }
 
-        const response = await testServer
-          .post('/produto')
-          .set('Authorization', token)
-          .send(produto)
+    const response = await testServer
+      .post('/produto')
+      .set('Authorization', token)
+      .send(produto)
 
-        expect(response.body).toHaveProperty('id')
-        expect(response.statusCode).toEqual(StatusCodes.CREATED)
-      })
+    expect(response.body).toHaveProperty('id')
+    expect(response.statusCode).toEqual(StatusCodes.CREATED)
+  })
 })
