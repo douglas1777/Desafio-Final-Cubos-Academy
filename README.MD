@@ -1376,7 +1376,7 @@ Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor
 
 -   **Requisição**  
     
-    Deverá possuir conteúdo no corpo (body) da requisição o arquivo de  imagem .
+    Deverá possuir conteúdo no multipart Form (body) da requisição o arquivo de  imagem.
 
 -   **Resposta**  
       
@@ -1397,10 +1397,10 @@ Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor
 
 #### Caso o upload tenha sucesso.
 ```javascript
-// HTTP Status 200 (ok)
+// HTTP Status Status 201 (Created) 
 
     {
-        "location": "https://.imagem.jpge.js.org/chokidar/-/chokidar-3.5.3.tgz",
+        "url": "https://.imagem.jpge.js.org/chokidar/-/chokidar-3.5.3.tgz",
     }
 
 ```
