@@ -42,7 +42,7 @@ const editarCliente = async (req, res) => {
       mensagem: `Já existe cliente cadastrado com o ${dados} informado`,
     })
   }
-
+  //atualizar cliente
   await repos.atualizarCliente(req.body, id)
 
   return res.status(StatusCodes.NO_CONTENT).send()

@@ -21,7 +21,7 @@ const producao = {
 }
 
 const pegaVariavel = () => {
-  if (process.env.NODE_ENV) {
+  if (process.env.NODE_ENV === 'teste') {
     return teste
   }
   return producao
