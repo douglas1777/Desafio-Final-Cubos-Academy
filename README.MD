@@ -1352,3 +1352,143 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
 ]
 ```
 <br><br>
+
+
+
+
+## **Upload de imagem**
+
+```javascript
+POST /arquivo/upload
+```
+
+Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor de armazenamento.
+
+**Lembre-se:** O nome da imagem deverá ser gerado, de modo, que não deverá ser passada a propriedade relacionada ao nome da imagem.
+
+             -Cada imagem deverá ter um nome gerado exclusivo, ou seja, não poderá ter risco de uma imagem possuir o mesmo nome de uma outra já existente no servidor de armazenamento.
+
+**REQUISITOS OBRIGATÓRIOS**
+
+  - Validar se a propriedade `imagem`, foi informada no corpo da requisição.
+  - Receber a propriedade `imagem` em formato base64 e enviar para o servidor de armazenamento.
+  - Obter e retornar a URL da imagem que teve upload concluído. 
+
+-   **Requisição**  
+    
+    Deverá possuir conteúdo no corpo (body) da requisição o arquivo de  imagem .
+
+-   **Resposta**  
+      
+    - Retornar a URL da imagem que teve upload concluído.
+
+
+**Exemplo de requisição**
+
+```javascript
+// POST /arquivo/upload
+
+
+    "arquivo":" imagem"
+
+```
+
+**Exemplos de resposta**
+
+#### Caso o upload tenha sucesso.
+```javascript
+// HTTP Status 200 (ok)
+
+    {
+        "location": "https://.imagem.jpge.js.org/chokidar/-/chokidar-3.5.3.tgz",
+    }
+
+```
+#### Caso usuario não esteja logado
+```javascript
+
+// HTTP Status 401 (Unauthorized)
+{
+ "mensagem": "O usuário não está autenticado".
+}
+```
+
+
+#### Caso não seja informado o arquivo a ser enviado.
+```javascript
+//HTTP Status 400 (Bad Request)
+
+{
+ "mensagem": "A seleção de uma imagem é obrigatório"
+}
+```
+
+<br><br>
+
+
+
+## **Listar imagem**
+
+```javascript
+GET /arquivo
+```
+
+Essa é a rota que será utilizada para obter a URL de todas imagens no servidor de armazenamento.
+
+
+**REQUISITOS OBRIGATÓRIOS**
+
+  - Obter e retornar a URL e o diretório de todas imagens que estão armazenadas dentro do servidor de armazenamento.
+
+-   **Requisição**  
+    
+    Não deverá possuir conteúdo no corpo (body) da requisição .
+
+-   **Resposta**  
+      
+    -  Retornar a URL e o diretório de todas imagens que estão armazenadas dentro do servidor de armazenamento
+
+
+**Exemplo de requisição**
+
+```javascript
+// POST /arquivo
+
+
+    
+```
+
+**Exemplos de resposta**
+
+#### Caso de  sucesso na requisição.
+```javascript
+// HTTP Status 200 (ok)
+
+    {
+         "url": 'http://example.com/imagem1.jpg',
+         "diretorio": '/imagens/imagem1.jpg',
+    },
+    {
+         "url": 'http://example.com/imagem2.jpg',
+         "diretorio": '/imagens/imagem2.jpg',
+    }
+
+```
+#### Caso usuario não esteja logado
+```javascript
+
+// HTTP Status 401 (Unauthorized)
+{
+ "mensagem": "O usuário não está autenticado".
+}
+```
+
+
+#### Caso não tenha arquivo no banco de dados.
+```javascript
+// HTTP Status 200 (ok)
+[];
+```
+
+
+
