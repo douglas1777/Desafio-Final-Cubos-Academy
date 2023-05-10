@@ -8,7 +8,7 @@ Construir uma API para um PDV (Frente de Caixa) que permita:
 - Editar Perfil do Usuário Logado
 - Listar categorias
 
-## **Banco de dados**
+# **Banco de dados**
 
 Você precisa criar um Banco de Dados PostgreSQL chamado `pdv`.
 para persistir e manipular os dados de categorias, clientes, pedidos, produtos e usuários utilizados pela aplicação.
@@ -50,7 +50,7 @@ Cadastrar na tabela Categorias os dados:
 
 -Games
 
-## **Status Codes**
+# **Status Codes**
 
 Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API.
 
@@ -65,7 +65,7 @@ Abaixo, listamos os possíveis **_status codes_** esperados como resposta da API
 // 500 (Internal Server Error) = erro inesperado do servidor
 ```
 
-Listar categorias\_
+# **Listar categorias**
 
 ```javascript
 GET / categorias;
@@ -107,7 +107,7 @@ Se não encontrar nada no banco de dados, retornar um array vazio
 [];
 ```
 
-**Cadastrar Usuário**
+# **Cadastrar Usuário**
 
 ```javascript
 POST / usuarios;
@@ -153,7 +153,7 @@ Exemplos de resposta:
 
 <br><br>
 
-**Login do usuário**
+# **Login do usuário**
 
 ```javascript
 POST / login;
@@ -285,8 +285,10 @@ Exemplos de resposta
 "O e-mail informado já está sendo utilizado por outro usuário."
 
 ```
+<br><br>
 
-### **2° Sprint**
+
+# **2° Sprint**
 
 <br><br>
 
@@ -326,7 +328,7 @@ para persistir e manipular os dados de categorias, clientes, pedidos, produtos e
 
 <br><br>
 
-### **Cadastrar Produto**
+# **Cadastrar Produto**
 
 
 ```javascript
@@ -337,9 +339,12 @@ Essa é a rota que será utilizada para cadastrar um novo produto no sistema.
 
 **Métodos:**
 
-**Lembre-se:** Deverá ser possível cadastrar **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
+    -Deverá  vincular uma imagem a um produto. Deverá ser criada uma coluna produto_imagem para que seja possível efetuar o vínculo entre a imagem e o produto.
 - Validar os campos obrigatórios que vem do body **(descricao, quantidade_estoque, valor,  categoria_id)**
+
+ **Critérios de aceite:**
+
+    - O campo produto_imagem deve ser opcional.
 
 - **Resposta:**
   Em caso de sucesso, deveremos enviar no corpo (body) da resposta o conteúdo do produto cadastrado, incluindo seu respectivo id. 
@@ -352,9 +357,9 @@ Exemplo de requisição:
 {
     "descricao": "Teclado",
     "quantidade_estoque": "4",
-    "valor": "3000"
-    "categoria_id":"1"
-   
+    "valor": "3000",
+    "categoria_id":"1",
+    "produto_imagem": <arquivo_da_imagem>
 }
 ```
 
@@ -368,6 +373,7 @@ Exemplos de resposta:
     "quantidade_estoque": "04",
     "valor": "3000"
     "categoria_id":"01"
+    "produto_imagem": <arquivo_da_imagem>
 }
 ```
 
@@ -377,7 +383,7 @@ Exemplos de resposta:
  "mensagem": "Categoria inexistente"
 }
 ```
-#### Caso não seja lançado a descricao
+### Caso não seja lançado a descricao
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -386,7 +392,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado quantidade_estoque
+### Caso não seja lançado quantidade_estoque
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -395,7 +401,7 @@ Exemplos de resposta:
  }
  ```
  
-#### Caso não seja lançado o valor
+### Caso não seja lançado o valor
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -406,7 +412,7 @@ Exemplos de resposta:
 
  ```
 
- #### Caso não seja lançado categoria_id
+ ### Caso não seja lançado categoria_id
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -418,21 +424,27 @@ Exemplos de resposta:
  ```
 <br><br>
 
-## **Editar dados do Produto**
+# **Editar dados do Produto**
 
 
 ```javascript
 PUT /produto/:id
 ```
-
 Essa é a rota que permite atualizar as informações de um produto cadastrado no sistema com base no id do produto informado no parâmetro da rota.
 
+
+**Critérios de aceite:**
+
+    -Deverá permitir vincular uma imagem a um produto existente.
+
+
+
 **Métodos:**
+    
 
-**Lembre-se:** Deverá ser possível atualizar o produto **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
-  
-   -Validar categoria informada na qual o produto será atualizado .
+    - Caso exista uma imagem vinculada a esse produto, e o campo `produto_imagem` de atualização possuir valor `null`deverá ser excluída a imagem vinculada anteriormente e o valor `null` será atribuído a coluna `produto_imagem` deixando o produto sem imagem vinculada.
+ 
+-Validar categoria informada na qual o produto será atualizado .
 
    - Validar os campos obrigatórios que vem do body **(descricao, quantidade_estoque, valor,  categoria_id)**
 
@@ -445,12 +457,12 @@ Exemplo de requisição:
 ```javascript
 // PUT /produto/:id
 {
-    "id":"1"
-    "descricao": "Teclado",
-    "quantidade_estoque": "4",
-    "valor": "3000"
-    "categoria_id":"1"
-   
+    "id": 1,
+    "descricao": "Teclado ",
+    "quantidade_estoque": 10,
+    "valor": 4500,
+    "categoria_id": 2,
+    "produto_imagem": null
 }
 ```
 
@@ -475,7 +487,7 @@ Exemplos de resposta:
  "mensagem": "Categoria inexistente"
 }
 ```
-#### Caso não seja lançado a descricao
+### Caso não seja lançado a descricao
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -484,7 +496,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado quantidade_estoque
+### Caso não seja lançado quantidade_estoque
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -493,7 +505,7 @@ Exemplos de resposta:
  }
  ```
  
-#### Caso não seja lançado o valor
+### Caso não seja lançado o valor
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -504,7 +516,7 @@ Exemplos de resposta:
 
  ```
 
- #### Caso não seja lançado categoria_id
+ ### Caso não seja lançado categoria_id
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -517,7 +529,7 @@ Exemplos de resposta:
 ```
 <br><br>
 
-## **Listar Produtos**
+# **Listar Produtos**
 
 ```javascript
 GET / produto
@@ -634,13 +646,12 @@ Caso não encontrar nada no banco de dados, retornar um array vazio
 ```
 <br><br>
 
-### **Detalhar Produto**
+# **Detalhar Produto**
 ```javascript
 GET/produto/:id
 ```
 Essa é a rota que será chamada quando o usuario logado quiser obter um de seus produtos cadastrados.   
 
-**Lembre-se:** Deverá ser possível obter o produto **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
 
 -   **Requisição**  
     Deverá ser enviado o ID do produto no parâmetro de rota do endpoint.  
@@ -655,14 +666,14 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
 
     -Validar se existe produto para o id enviado como parâmetro na rota.
 
-#### **Exemplo de requisição**
+### **Exemplo de requisição**
 
 ```javascript
 // GET /produto/:2
 // Sem conteúdo no corpo (body) da requisição
 ```
 
-#### **Exemplos de resposta**
+### **Exemplos de resposta**
 
 ```javascript
 // HTTP Status 200 (OK) = requisição bem sucedida
@@ -686,18 +697,17 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
 <br><br>
 
 
-### **Excluir Produto por ID**
+# **Excluir Produto por ID**
 ```javascript
 DELETE/produto/:id
 ```
 Essa é a rota que será chamada quando o usuario logado quiser deletar um de seus produtos cadastrados.   
 
-**Lembre-se:** Deverá ser possível deletar o produto **apenas** com usuário logado, que deverá ser identificado através do ID presente no token de validação.
-
 -   **Requisição**  
-    Deverá ser enviado o ID do produto a ser deletado no parâmetro de rota do endpoint.  
-
-    O corpo (body) da requisição não deverá possuir nenhum conteúdo.
+    - Deverá ser enviado o ID do produto a ser deletado no parâmetro de rota do endpoint.  
+    -O corpo (body) da requisição não deverá possuir nenhum conteúdo.
+    -Deverá ser aplicada uma regra de negócio que não permitirá exclusão de produto que tenha sido registrado em algum pedido.
+    - Na exclusão do produto a imagem vinculada a este produto deverá ser excluída do servidor de armazenamento.
 
 -   **Resposta**  
     Em caso de **sucesso**, o corpo (body) da resposta deverá possuir um objeto com uma propriedade **mensagem** de sucesso.  
@@ -706,15 +716,16 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
 -   **REQUISITOS OBRIGATÓRIOS**
 
     -Validar se existe produto para o id enviado como parâmetro na rota.
+    - Validar se o produto que está sendo excluído não está vinculado a nenhum pedido, caso estiver, não poderá ser excluido,
 
-#### **Exemplo de requisição**
+### **Exemplo de requisição**
 
 ```javascript
 // DELETE /produto/2
 // Sem conteúdo no corpo (body) da requisição
 ```
 
-#### **Exemplos de resposta**
+### **Exemplos de resposta**
 
 ```javascript
 // HTTP Status 200 (OK) = requisição bem sucedida
@@ -731,7 +742,7 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
 ```
 <br><br>
 
-**Cadastrar Cliente**
+# **Cadastrar Cliente**
 
 ```javascript
 POST /cliente
@@ -802,7 +813,7 @@ Exemplos de resposta:
 
  "mensagem": "Já existe cliente cadastrado com o Cpf informado".
 ```
-#### Caso não seja lançado o nome
+### Caso não seja lançado o nome
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -811,7 +822,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado o email
+### Caso não seja lançado o email
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -820,7 +831,7 @@ Exemplos de resposta:
  }
  ```
  
-#### Caso não seja lançado o cpf
+### Caso não seja lançado o cpf
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -832,7 +843,7 @@ Exemplos de resposta:
 
 <br><br>
 
-## **Editar dados do Cliente**
+# **Editar dados do Cliente**
 
 
 ```javascript
@@ -896,7 +907,7 @@ Exemplos de resposta:
 "O cpf informado já está sendo utilizado por outro usuário."
 ```
 
-#### Caso não seja lançado o nome
+### Caso não seja lançado o nome
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -905,7 +916,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado o email
+### Caso não seja lançado o email
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -914,7 +925,7 @@ Exemplos de resposta:
  }
  ```
  
-#### Caso não seja lançado o cpf
+### Caso não seja lançado o cpf
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -988,7 +999,7 @@ Se não encontrar nada no banco de dados, retornar um array vazio
 
 <br><br>
 
-### **Detalhar Cliente**
+## **Detalhar Cliente**
 ```javascript
 GET/cliente/:id
 ```
@@ -1009,14 +1020,14 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
 
     -Validar se existe produto para o id enviado como parâmetro na rota.
 
-#### **Exemplo de requisição**
+### **Exemplo de requisição**
 
 ```javascript
 // GET /cliente/2
 // Sem conteúdo no corpo (body) da requisição
 ```
 
-#### **Exemplos de resposta**
+### **Exemplos de resposta**
 
 ```javascript
 // HTTP Status 200 (OK) = requisição bem sucedida
@@ -1043,7 +1054,7 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
 
 <br><br>
 
-#### **3° Sprint**
+# **3° Sprint**
 
 <br><br>
 
@@ -1081,7 +1092,7 @@ para persistir e manipular os dados de categorias, clientes, pedidos, produtos e
 
 <br><br>
 
-**Cadastrar pedido**
+## **Cadastrar pedido**
 
 ```javascript
 POST /pedido
@@ -1143,7 +1154,7 @@ Exemplos de resposta:
     "valor_produto": 230000,
 }
 ```
-#### Caso usuario não esteja logado
+### Caso usuario não esteja logado
 ```javascript
 
 // HTTP Status 401 (Unauthorized)
@@ -1151,7 +1162,7 @@ Exemplos de resposta:
  "mensagem": "O usuário não está autenticado".
 }
 ```
-#### Caso não seja lançado o cliente_id
+### Caso não seja lançado o cliente_id
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -1159,7 +1170,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado o produto_id
+### Caso não seja lançado o produto_id
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -1167,7 +1178,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não seja lançado o quantidade_produto
+### Caso não seja lançado o quantidade_produto
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -1176,7 +1187,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não exista cliente_id enviado no corpo do (body) da requisição.
+### Caso não exista cliente_id enviado no corpo do (body) da requisição.
 ```javascript
 // HTTP Status 404 (Not Found)
 {
@@ -1185,7 +1196,7 @@ Exemplos de resposta:
  }
  
 ```
-#### Caso não exista  produto_id informado dentro do array enviado no corpo (body) da requisição.
+### Caso não exista  produto_id informado dentro do array enviado no corpo (body) da requisição.
 ```javascript
 // HTTP Status 404 (Not Found)
 {
@@ -1193,7 +1204,7 @@ Exemplos de resposta:
 
  }
  ```
- #### Caso não exista a quantidade em estoque de cada produto existente dentro do array, de acordo com a quantidade informada no corpo (body) da requisição.
+ ### Caso não exista a quantidade em estoque de cada produto existente dentro do array, de acordo com a quantidade informada no corpo (body) da requisição.
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
@@ -1269,7 +1280,7 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
     }
 ]
 ```
-#### Caso usuario não esteja logado
+### Caso usuario não esteja logado
 ```javascript
 
 // HTTP Status 401 (Unauthorized)
@@ -1278,14 +1289,14 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
 }
 ```
 
-#### Caso não encontrar nada no banco de dados, retornar um array vazio
+### Caso não encontrar nada no banco de dados, retornar um array vazio
 
 ```javascript
 // HTTP Status 200 (ok)
 [];
 ```
 
-#### Caso seja informado o parâmetro do tipo query **cliente_id** inexistente.
+### Caso seja informado o parâmetro do tipo query **cliente_id** inexistente.
 ```javascript
 //HTTP Status 404 (Not Found)
 
@@ -1295,7 +1306,7 @@ Essa é a rota que será chamada quando o usuário logado quiser listar todos os
 ```
 
 
-#### Caso não seja informado o parâmetro do tipo query.
+### Caso não seja informado o parâmetro do tipo query.
 ```javascript
 // HTTP Status 200 (ok)
 [
@@ -1395,7 +1406,7 @@ Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor
 
 **Exemplos de resposta**
 
-#### Caso o upload tenha sucesso.
+### Caso o upload tenha sucesso.
 ```javascript
 // HTTP Status Status 201 (Created) 
 
@@ -1404,7 +1415,7 @@ Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor
     }
 
 ```
-#### Caso usuario não esteja logado
+### Caso usuario não esteja logado
 ```javascript
 
 // HTTP Status 401 (Unauthorized)
@@ -1414,7 +1425,7 @@ Essa é a rota que será utilizada para fazer o upload de uma imagem no servidor
 ```
 
 
-#### Caso não seja informado o arquivo a ser enviado.
+### Caso não seja informado o arquivo a ser enviado.
 ```javascript
 //HTTP Status 400 (Bad Request)
 
@@ -1460,7 +1471,7 @@ Essa é a rota que será utilizada para obter a URL de todas imagens no servidor
 
 **Exemplos de resposta**
 
-#### Caso de  sucesso na requisição.
+### Caso de  sucesso na requisição.
 ```javascript
 // HTTP Status 200 (ok)
 
@@ -1474,7 +1485,7 @@ Essa é a rota que será utilizada para obter a URL de todas imagens no servidor
     }
 
 ```
-#### Caso usuario não esteja logado
+### Caso usuario não esteja logado
 ```javascript
 
 // HTTP Status 401 (Unauthorized)
@@ -1484,7 +1495,7 @@ Essa é a rota que será utilizada para obter a URL de todas imagens no servidor
 ```
 
 
-#### Caso não tenha arquivo no banco de dados.
+### Caso não tenha arquivo no banco de dados.
 ```javascript
 // HTTP Status 200 (ok)
 [];
@@ -1492,3 +1503,57 @@ Essa é a rota que será utilizada para obter a URL de todas imagens no servidor
 
 
 
+
+## **Emplementações de edpoints**
+
+```javascript
+
+// Aplicar validação na exclusão de produto
+
+
+Deverá ser aplicada uma regra de negócio que não permitirá exclusão de produto que tenha sido registrado em algum pedido.
+
+"Critérios de aceite:"
+
+- Validar se o produto que está sendo excluído não está vinculado a nenhum pedido, caso estiver, não poderá ser 
+```
+
+```javascript
+
+// Aprimorar cadastro de produto
+
+
+Deverá ser aprimorado o cadastro de produto para permitir vincular uma imagem a um produto. Deverá ser criada uma coluna produto_imagem para que seja possível efetuar o vínculo entre a imagem e o produto.
+
+"Critérios de aceite:"
+
+-  O campo produto_imagem deve ser opcional.
+```
+```javascript
+
+// Aprimorar atualização de produto
+
+
+-Deverá ser aprimorada a atualização de produto para permitir vincular uma imagem a um produto existente.
+
+
+"Critérios de aceite:"
+
+- Caso exista uma imagem vinculada a esse produto, a imagem vinculada anteriormente deverá ser excluída no servidor de armazenamento e substituída pela nova imagem.
+- Caso exista uma imagem vinculada a esse produto, e o campo `produto_imagem` de atualização possuir valor `null`deverá ser excluída a imagem vinculada anteriormente e o valor `null` será atribuído a coluna `produto_imagem` deixando o produto sem imagem vinculada.
+
+```
+
+```javascript
+
+// Aprimorar exclusão de produto
+
+
+-Deverá ser aprimorada a exclusão de produto para que quando o produto for excluído também seja removida a imagem vinculada a ele na servidor de armazenamento.
+
+
+"Critérios de aceite:"
+
+- Na exclusão do produto a imagem vinculada a este produto deverá ser excluída do servidor de armazenamento.
+
+```
