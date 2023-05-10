@@ -1,9 +1,6 @@
 const { StatusCodes } = require('http-status-codes')
 
-const {
-  erro_categoria_nao_encontrada,
-  erro_produto_nao_encontrado,
-} = require('../../utils/msgErros')
+const msg = require('../../utils/msgErros')
 const { repos } = require('../../repositorios')
 
 const cadastrarProduto = async (req, res) => {
@@ -12,7 +9,7 @@ const cadastrarProduto = async (req, res) => {
   const categoria = await repos.verificarCategoriaExiste(categoria_id)
 
   if (!categoria) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_categoria_nao_encontrada)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_categoria_nao_encontrada)
   }
 
   const produto = await repos.salvarProduto(req.body)
@@ -31,14 +28,14 @@ const listarProdutos = async (req, res) => {
     if (!categoria) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json(erro_categoria_nao_encontrada)
+        .json(msg.erro_categoria_nao_encontrada)
     }
   }
 
   const produtos = await repos.detalharProdutos(categoriaQuery)
 
   if (!produtos[0]) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_produto_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
   }
 
   res.status(StatusCodes.OK).json(produtos)
@@ -52,13 +49,13 @@ const editarProduto = async (req, res) => {
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_produto_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
   }
 
   const categoria = await repos.verificarCategoriaExiste(categoria_id)
 
   if (!categoria) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_categoria_nao_encontrada)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_categoria_nao_encontrada)
   }
 
   await repos.atualizarProduto(req.body, id)
@@ -72,7 +69,7 @@ const detalharProduto = async (req, res) => {
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_produto_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
   }
 
   res.status(StatusCodes.OK).json(produto)
@@ -84,7 +81,7 @@ const excluirProduto = async (req, res) => {
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(erro_produto_nao_encontrado)
+    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
   }
 
   await repos.deletarProduto(id)
