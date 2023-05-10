@@ -4,7 +4,7 @@ const {
   verificaDadosRepetidos,
 } = require('../../utils/verificaEmailCpfCliente')
 const { repos } = require('../../repositorios')
-const { erro_categoria_nao_encontrada, erro_cliente_nao_encontrado } = require('../../utils/msgErros')
+const { erro_cliente_nao_encontrado } = require('../../utils/msgErros')
 
 const cadastrarCliente = async (req, res) => {
   const { email, cpf } = req.body
@@ -43,7 +43,7 @@ const editarCliente = async (req, res) => {
       mensagem: `Já existe cliente cadastrado com o ${dados} informado`,
     })
   }
-
+  //atualizar cliente
   await repos.atualizarCliente(req.body, id)
 
   return res.status(StatusCodes.NO_CONTENT).send()
