@@ -1,4 +1,4 @@
-const knex = require('../database/config/conexao')
+const knex = require('../database/config')
 
 const salvarProduto = async (produto) => {
   const [inserirProduto] = await knex('produtos').insert(produto).returning('*')
@@ -18,7 +18,7 @@ const verificarProdutoExiste = async (id) => {
 }
 
 const detalharProdutos = async (categoria_id) => {
-  if (categoria_id[0]) {
+  if (categoria_id) {
     return await knex('produtos').whereIn('categoria_id', categoria_id)
   }
 

@@ -5,8 +5,12 @@
   "main": "./src/index.js",
   "scripts": {
     "dev": "nodemon ./src/index",
-    "test": "jest --runInBand --no-cache",
-    "testAsync": "jest --detectOpenHandles"
+    "test": "jest",
+    "knex:latest": "knex --knexfile ./src/database/config/conexao.js migrate:latest",
+    "knex:rollback": "knex --knexfile ./src/database/config/conexao.js migrate:rollback",
+    "knex:rollbackAll": "knex --knexfile ./src/database/config/conexao.js migrate:rollback --all",
+    "knex:seed": "knex --knexfile ./src/database/config/conexao.js seed:run"
+    
   },
   "keywords": [],
   "author": "",
@@ -17,6 +21,7 @@
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "prettier": "2.8.7",
+    "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
   },
   "dependencies": {

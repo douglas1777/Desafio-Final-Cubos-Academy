@@ -1,19 +1,13 @@
 const { StatusCodes } = require('http-status-codes')
 const { testServer } = require('../jest.setup')
 
-const criaUsuarioPadrao = {
-  nome: 'bruno',
-  email: 'bruno@gmail.com',
-  senha: '123',
-}
 
 describe('Logar usuário', () => {
 
   it('deve logar o usuário', async () => {
-    const { body } = await testServer.post('/usuario').send(criaUsuarioPadrao)
     const logarUsuario = await testServer
       .post('/login')
-      .send({ email: body.email, senha: criaUsuarioPadrao.senha })
+      .send({ email: 'bruno@gmail.com', senha: '123' })
 
     expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
   })

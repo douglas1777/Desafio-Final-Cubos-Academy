@@ -2,7 +2,7 @@ const { StatusCodes } = require('http-status-codes')
 const { testServer } = require('../jest.setup')
 
 let token
-const criaClientePadrao = {
+const criaClienteRepetido = {
   nome: 'José',
   email: 'jose@email.com',
   cpf: '12345668804',
@@ -19,11 +19,6 @@ describe('Criar cliente', () => {
       .send({ email: body.email, senha: '123' })
 
     token = 'bearer ' + logarUsuario.body.token
-
-    const response = await testServer.post('/cliente').set('Authorization', token).send(criaClientePadrao)
-
-    clienteId = response.body.id
-    expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
   })
 
   it('deve recusar a criação de um cliente por falta de email e cpf', async () => {
@@ -60,7 +55,7 @@ describe('Criar cliente', () => {
       const response = await testServer
         .post('/cliente')
         .set('Authorization', token)
-        .send(criaClientePadrao)
+        .send(criaClienteRepetido)
 
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
       expect(response.body).toHaveProperty('mensagem')
@@ -69,11 +64,11 @@ describe('Criar cliente', () => {
       )
     }),
 
-    it('deve recusar a criação de um cliente cpf repetido', async () => {
+    it('deve recusar a criação de um cliente por email repetido', async () => {
       const response = await testServer
         .post('/cliente')
         .set('Authorization', token)
-        .send({ ...criaClientePadrao, cpf: '12345548204' })
+        .send({ ...criaClienteRepetido, cpf: '12345548204' })
 
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
       expect(response.body).toHaveProperty('mensagem')
@@ -82,11 +77,11 @@ describe('Criar cliente', () => {
       )
     }),
 
-    it('deve recusar a criação de um cliente por email repetido', async () => {
+    it('deve recusar a criação de um cliente por cpf repetido', async () => {
       const response = await testServer
         .post('/cliente')
         .set('Authorization', token)
-        .send({...criaClientePadrao, email: 'emailNovo@email'})
+        .send({...criaClienteRepetido, email: 'emailNovo@email'})
 
       expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST)
       expect(response.body).toHaveProperty('mensagem')
@@ -99,7 +94,7 @@ describe('Criar cliente', () => {
       const response = await testServer
         .post('/cliente')
         .set('Authorization', token)
-        .send({ ...criaClientePadrao, email: 'email' })
+        .send({ ...criaClienteRepetido, email: 'email' })
 
       expect(response.body).toHaveProperty('mensagem')
       expect(response.body.mensagem).toHaveProperty('email')

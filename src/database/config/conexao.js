@@ -1,19 +1,30 @@
 const path = require('path')
-const teste = {
-  client: 'pg',
+
+const development = {
+  client: 'sqlite3',
+  useNullAsDefault: true,
   connection: {
-    host: 'localhost',
-    user: process.env.DATABASE_USER_TEST,
-    password: process.env.DATABASE_USER_PASSWORD,
-    database: 'pdv',
+    filename: path.resolve(__dirname, '..', '..', '..', 'database.sqlite'),
   },
   migrations: {
     directory: path.resolve(__dirname, '..', 'migrations'),
   },
   seeds: {
-    directory: '../seeds',
+    directory: path.resolve(__dirname, '..', 'seeds'),
+  },
+  pool: {
+    afterCreate: (connection, done) => {
+      connection.run('PRAGMA foreign_keys = ON')
+      done()
+    },
   },
 }
+
+const test = {
+  ...development,
+  connection: ':memory:'
+}
+
 
 const producao = {
   client: 'pg',
@@ -26,15 +37,4 @@ const producao = {
   },
 }
 
-const pegaVariavel = () => {
-  if (process.env.NODE_ENV) {
-    return teste
-  }
-  return producao
-}
-
-const knex = require('knex')({
-  ...pegaVariavel(),
-})
-
-module.exports = knex
+module.exports = { development, test, producao }

@@ -1,4 +1,4 @@
-const knex = require('../database/config/conexao')
+const knex = require('../database/config')
 
 const consultaCliente = async (email, cpf) => {
   return await knex('clientes').where({ email }).orWhere({ cpf }).first()

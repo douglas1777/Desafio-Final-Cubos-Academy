@@ -2,19 +2,13 @@ const { StatusCodes } = require('http-status-codes')
 const { testServer } = require('../jest.setup')
 
 let token
-const criaUsuarioPadrao = {
-  nome: 'bruno',
-  email: 'bruno@gmail.com',
-  senha: '123',
-}
 
 describe('Editar usuário', () => {
   beforeAll(async () => {
-    const { body } = await testServer.post('/usuario').send(criaUsuarioPadrao)
 
     const logarUsuario = await testServer
       .post('/login')
-      .send({ email: body.email, senha: criaUsuarioPadrao.senha })
+      .send({ email: 'bruno@gmail.com', senha: '123' })
     token = 'bearer ' + logarUsuario.body.token
 
     expect(logarUsuario.statusCode).toEqual(StatusCodes.OK)
@@ -23,11 +17,9 @@ describe('Editar usuário', () => {
   it('deve recusar a edição de um usuário por outro email já existente', async () => {
     const usuarioEmailRepetido = {
       nome: 'bruno',
-      email: 'brunoeditado@gmail.com',
+      email: 'jose@gmail.com',
       senha: '123',
     }
-
-    await testServer.post('/usuario').send(usuarioEmailRepetido)
 
     const response = await testServer
       .put('/usuario')
