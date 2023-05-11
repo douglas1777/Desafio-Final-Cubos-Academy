@@ -1151,7 +1151,7 @@ Exemplos de resposta:
     "id":1
     "cliente_id": 1,
     "observacao": "Em caso de ausência recomendo deixar com algum vizinho",
-    "valor_produto": 230000,
+    "valor_total": 230000,
 }
 ```
 ### Caso usuario não esteja logado
@@ -1200,7 +1200,8 @@ Exemplos de resposta:
 ```javascript
 // HTTP Status 404 (Not Found)
 {
- "mensagem": "Produto não encontrado no banco de dados"          
+     "mensagem": "Produto não encontrado",
+    "produto_id": 35         
 
  }
  ```
@@ -1208,7 +1209,9 @@ Exemplos de resposta:
 ```javascript
 // HTTP Status 400 (Bad Request)
 {
- "mensagem": "A quantidade de produto solicitada está acima do volume em estoque"          
+ "mensagem": "A quantidade de produto solicitada está acima do volume em estoque",
+    "produto_id": 5,
+    "quantidade_estoque": "0"      
 
  }
  ```
