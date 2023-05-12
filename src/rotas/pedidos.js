@@ -1,12 +1,10 @@
 const { Router } = require('express')
 
-const { validarToken } = require('../intermediarios/autenticacao')
 const { pedidosControlador } = require('../controladores')
 const { schemas } = require('../schemas')
 
-const router = Router()
+const rotas = Router()
 
-router.use(validarToken)
-router.post('/', schemas.validacaoCamposPedido, pedidosControlador.cadastrarPedido)
+rotas.post('/', schemas.validacaoCamposPedido, pedidosControlador.cadastrarPedido)
 
-module.exports = router
+module.exports = rotas

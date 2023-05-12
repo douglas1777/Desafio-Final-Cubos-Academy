@@ -1,8 +1,8 @@
 const express = require("express");
 const { listarCategorias } = require("../controladores/transacoes/categorias");
 
-const router = express.Router();
+const rotas = express.Router();
 
-router.get("/", listarCategorias);
+rotas.get("/", listarCategorias);
 
-module.exports = router;
+module.exports = rotas;

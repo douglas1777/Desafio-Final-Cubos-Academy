@@ -3,8 +3,8 @@ const { Router } = require("express");
 const { login } = require("../controladores/usuarios/login");
 const { loginSchema } = require("../schemas/schemasUsuario");
 
-const router = Router();
+const rotas = Router();
 
-router.post("/", loginSchema, login);
+rotas.post("/", loginSchema, login);
 
-module.exports = router;
+module.exports = rotas;
