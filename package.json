@@ -10,7 +10,6 @@
     "knex:rollback": "knex --knexfile ./src/database/config/conexao.js migrate:rollback",
     "knex:rollbackAll": "knex --knexfile ./src/database/config/conexao.js migrate:rollback --all",
     "knex:seed": "knex --knexfile ./src/database/config/conexao.js seed:run"
-    
   },
   "keywords": [],
   "author": "",
@@ -33,6 +32,7 @@
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
     "knex": "^2.4.2",
+    "nodemailer": "^6.9.2",
     "pg": "^8.10.0",
     "swagger-ui-express": "^4.6.2",
     "yup": "^1.1.1",
