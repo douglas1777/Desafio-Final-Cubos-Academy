@@ -9,7 +9,7 @@ exports.up = function (knex) {
       table.string('quantidade_estoque').notNullable(),
       table.integer('valor').notNullable(),
       table.integer('categoria_id').notNullable().references('id').inTable('categorias')
-    table.string('imagem').nullable(),
+    table.string('produto_imagem').nullable(),
 
       table.comment('Tabela criada para adicionar produtos')
   })
