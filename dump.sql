@@ -61,3 +61,4 @@ create table pedido_produtos (
 
 alter table produtos add column imagem text; 
 
+alter table produtos rename imagem to produto_imagem
