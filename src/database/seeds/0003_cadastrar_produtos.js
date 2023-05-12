@@ -15,7 +15,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 4,
@@ -23,7 +23,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 5,
@@ -31,7 +31,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 6,
@@ -39,7 +39,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 7,
@@ -47,7 +47,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 8,
@@ -55,7 +55,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 9,
@@ -63,7 +63,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '10',
       valor: 50,
       categoria_id: 1,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 11,
@@ -71,7 +71,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '20',
       valor: 100,
       categoria_id: 3,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 13,
@@ -79,7 +79,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '100',
       valor: 15000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
     {
       id: 14,
@@ -87,7 +87,7 @@ exports.seed = async function (knex) {
       quantidade_estoque: '1',
       valor: 33000,
       categoria_id: 2,
-      imagem: null,
+      produto_imagem: null,
     },
   ])
 }
