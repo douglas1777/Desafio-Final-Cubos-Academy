@@ -4,11 +4,11 @@
  */
 
 exports.seed = async function (knex) {
-    const [{ count }] = await knex('pedidos').count('* as count')
+    const [{ count }] = await knex('pedido_produtos').count('* as count')
 
     if (!Number.isInteger(count) || count > 0) return
 
-    return await knex('pedidos').insert([
+    return await knex('pedido_produtos').insert([
         {
             "quantidade_produto": 1,
             "valor_produto": 3000,

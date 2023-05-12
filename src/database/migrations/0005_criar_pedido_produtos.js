@@ -5,10 +5,10 @@
 exports.up = function (knex) {
     return knex.schema.createTable('pedido_produtos', table => {
         table.bigIncrements('id').primary().index(),
-            table.integer('pedido_id').nullable().references('id').inTable('pedidos')
+            table.integer('pedido_id').notNullable().references('id').inTable('pedidos')
         table.integer('produto_id').notNullable().references('id').inTable('produtos')
         table.integer('quantidade_produto').notNullable(),
-            table.integer('valor_produto').nullable().references('id').inTable('categorias')
+            table.integer('valor_produto').notNullable()
 
         table.comment('Tabela criada para adicionar os produtos dos pedidos')
     })

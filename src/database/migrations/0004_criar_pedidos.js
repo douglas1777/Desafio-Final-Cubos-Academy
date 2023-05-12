@@ -7,7 +7,7 @@ exports.up = function (knex) {
         table.bigIncrements('id').primary().index(),
             table.integer('cliente_id').notNullable().references('id').inTable('clientes'),
             table.string('observacao').nullable(),
-            table.integer('valor_total').nullable()
+            table.integer('valor_total').notNullable()
 
         table.comment('Tabela criada para adicionar pedidos')
     })
