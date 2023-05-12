@@ -1,3 +1,3 @@
 const multer = require('multer')
-
-module.exports = multer({})
+const validarImagem =  multer({}).single('imagem')
+module.exports = validarImagem
