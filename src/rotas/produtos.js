@@ -1,28 +1,25 @@
 const { Router } = require('express')
-const { validarToken } = require('../intermediarios/autenticacao')
 const { schemas } = require('../schemas')
 const { produtosControlador } = require('../controladores')
 
-const router = Router()
+const rotas = Router()
 
-router.use(validarToken)
+rotas.get('/', produtosControlador.listarProdutos)
 
-router.get('/', produtosControlador.listarProdutos)
-
-router.post(
+rotas.post(
   '/',
   schemas.validacaoCamposProduto,
   produtosControlador.cadastrarProduto
 )
 
-router.put(
+rotas.put(
   '/:id',
   schemas.validacaoCamposProduto,
   produtosControlador.editarProduto
 )
 
-router.get('/:id', produtosControlador.detalharProduto)
+rotas.get('/:id', produtosControlador.detalharProduto)
 
-router.delete('/:id', produtosControlador.excluirProduto)
+rotas.delete('/:id', produtosControlador.excluirProduto)
 
-module.exports = router
+module.exports = rotas
