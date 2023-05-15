@@ -4,7 +4,6 @@ const { repos } = require('../../repositorios')
 const msg = require('../../utils/msgErros')
 const { transportarEmail } = require('../../utils/transportador')
 const { listasPedidos } = require('../../repositorios/pedidos')
-const { erro_cliente_nao_encontrado } = require('../../utils/msgErros')
 
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, observacao, pedido_produtos } = req.body
@@ -87,9 +86,41 @@ const listarPedidos = async (req, res) => {
   if (pedidos.length === 0) {
     return res
       .status(StatusCodes.NOT_FOUND)
-      .json(msg.erro_id_cliente_nao_encontrado)
+      .json(msg.erro_cliente_nao_encontrado)
   }
-  return res.status(StatusCodes.OK).json(pedidos)
+  const resultado = []
+  for (const pedido of pedidos) {
+    const pedidoExistente = resultado.find((p) => p.pedido.id === pedido.id)
+    if (pedidoExistente) {
+      pedidoExistente.pedido_produtos.push({
+        id: pedido['pedido_produtos.id'],
+        quantidade_produto: pedido.quantidade_produto,
+        valor_produto: pedido.valor_produto,
+        pedido_id: pedido.pedido_id,
+        produto_id: pedido.produto_id,
+      })
+    } else {
+      resultado.push({
+        pedido: {
+          id: pedido.id,
+          valor_total: pedido.valor_total,
+          observacao: pedido.observacao,
+          cliente_id: pedido.cliente_id,
+        },
+        pedido_produtos: [
+          {
+            id: pedido['pedido_produtos.id'],
+            quantidade_produto: pedido.quantidade_produto,
+            valor_produto: pedido.valor_produto,
+            pedido_id: pedido.pedido_id,
+            produto_id: pedido.produto_id,
+          },
+        ],
+      })
+    }
+  }
+
+  return res.status(StatusCodes.OK).json(resultado)
 }
 
 module.exports = { cadastrarPedido, listarPedidos }
