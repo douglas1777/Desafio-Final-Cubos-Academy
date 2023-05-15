@@ -5,5 +5,8 @@ const salvarPedido = async (tabela, dados) => {
   return novoItemInserido
 }
 
+const consultaProdutoFoiPedido = async (tabela, pedido_id) => {
+  return await knex(tabela).where({ pedido_id }).first()
+}
 
-module.exports = { salvarPedido }
+module.exports = { salvarPedido, consultaProdutoFoiPedido }
