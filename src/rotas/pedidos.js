@@ -5,6 +5,11 @@ const { schemas } = require('../schemas')
 
 const rotas = Router()
 
-rotas.post('/', schemas.validacaoCamposPedido, pedidosControlador.cadastrarPedido)
+rotas.post(
+  '/',
+  schemas.validacaoCamposPedido,
+  pedidosControlador.cadastrarPedido
+)
+rotas.get('/', pedidosControlador.listarPedidos)
 
 module.exports = rotas

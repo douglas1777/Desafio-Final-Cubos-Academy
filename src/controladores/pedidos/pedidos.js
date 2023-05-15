@@ -3,6 +3,8 @@ const { StatusCodes } = require('http-status-codes')
 const { repos } = require('../../repositorios')
 const msg = require('../../utils/msgErros')
 const { transportarEmail } = require('../../utils/transportador')
+const { listasPedidos } = require('../../repositorios/pedidos')
+const { erro_cliente_nao_encontrado } = require('../../utils/msgErros')
 
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, observacao, pedido_produtos } = req.body
@@ -79,5 +81,15 @@ const cadastrarPedido = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ ...pedidoSalvo, email_resposta })
 }
+const listarPedidos = async (req, res) => {
+  const { cliente_id } = req.query
+  const pedidos = await listasPedidos('pedidos', cliente_id)
+  if (pedidos.length === 0) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_id_cliente_nao_encontrado)
+  }
+  return res.status(StatusCodes.OK).json(pedidos)
+}
 
-module.exports = { cadastrarPedido }
+module.exports = { cadastrarPedido, listarPedidos }

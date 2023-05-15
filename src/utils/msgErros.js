@@ -7,6 +7,9 @@ module.exports = {
   },
 
   erro_cliente_nao_encontrado: { mensagem: 'Cliente não encontrado' },
+  erro_id_cliente_nao_encontrado: {
+    mensagem: 'Cliente não encontrado no banco de dados',
+  },
   erro_categoria_nao_encontrada: { mensagem: 'Categoria não encontrada' },
   erro_produto_nao_encontrado: { mensagem: 'Produto não encontrado' },
   erro_sem_estoque: {
