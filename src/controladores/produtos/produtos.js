@@ -18,7 +18,12 @@ const cadastrarProduto = async (req, res) => {
   }
 
   if (produto_imagem) {
-    const imagemExiste = await verificaUrl(produto_imagem)
+    const path = produto_imagem.split('/')
+    
+    const imagemExiste = await verificaUrl(
+      produto_imagem,
+      path[path.length - 2]
+    )
 
     if (!imagemExiste) {
       return res
@@ -121,10 +126,10 @@ const excluirProduto = async (req, res) => {
       .json(msg.erro_produto_nao_encontrado)
   }
 
-  const produtoPedido = await consultaProdutoFoiPedido('pedidos', id )
+  const produtoPedido = await consultaProdutoFoiPedido('pedido_produtos', id )
 
   if (produtoPedido) {
-    return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_categoria_nao_encontrada)
+    return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_produto_pedido)
   }
 
   if (produto.produto_imagem) {

@@ -2,10 +2,16 @@ const { getImagem, deleteImagem } = require('../services/servidorImagem')
 
 const { env } = process
 
-const verificaUrl = async (url) => {
-  const nomeImagem = url.split(env.API_BUCKET_ENDPOINT + 'produtos/')[1]
-  const imagem = await getImagem(env.API_BUCKET_NOME, 'produtos')
-  return imagem.find((url) => url.name === nomeImagem)
+const verificaUrl = async (url, path) => {
+
+  if (path === 'produtos' || path === 'teste') {
+    const nomeImagem = url.split(`${env.API_BUCKET_ENDPOINT}${path}/`)[1]
+
+    const imagem = await getImagem(env.API_BUCKET_NOME, path)
+    
+    return imagem.find((url) => url.name === nomeImagem)
+  }
+  return false
 }
 
 const apagaImagem = async (url) => {

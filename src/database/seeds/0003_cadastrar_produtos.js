@@ -23,7 +23,8 @@ exports.seed = async function (knex) {
       quantidade_estoque: '4',
       valor: 3000,
       categoria_id: 2,
-      produto_imagem: null,
+      produto_imagem:
+        'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/75f534c9-d6a8-4c76-814b-ee8c2d08ca88',
     },
     {
       id: 5,
@@ -71,7 +72,8 @@ exports.seed = async function (knex) {
       quantidade_estoque: '20',
       valor: 100,
       categoria_id: 3,
-      produto_imagem: null,
+      produto_imagem:
+        'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/9d0decbe-7c59-45dd-bd38-ecc4476dcbc6',
     },
     {
       id: 13,
@@ -87,7 +89,8 @@ exports.seed = async function (knex) {
       quantidade_estoque: '1',
       valor: 33000,
       categoria_id: 2,
-      produto_imagem: null,
+      produto_imagem:
+        'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/d843d1f4-01e8-4a9f-b03e-00c8b3a8aa16',
     },
   ])
 }
