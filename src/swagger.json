@@ -272,7 +272,7 @@
                 }
             }
         },
-        "/produto?filtro[categoria_id]": {
+        "/produto?categoria_id": {
             "get": {
                 "tags": [
                     "Produto"
@@ -298,15 +298,23 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de produtos de acordo com a categoria informada",
-                        "schema": {
-                            "$ref": "#/components/schemas/Produto"
+                        "description": "Lista de produtos de acordo com o categoria informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Produto"
+                                }
+                            }
                         }
                     },
                     "201": {
-                        "description": "Lista de todos os produtos pois a categoria não foi informada",
-                        "schema": {
-                            "$ref": "#/components/schemas/Produto"
+                        "description": "Lista de todos produtos quando não for informado a categoria informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListaProdutos"
+                                }
+                            }
                         }
                     },
                     "401": {
@@ -391,14 +399,17 @@
                     "application/json"
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Produto excluido com sucesso."
+                    "204": {
+                        "description": "(No Content)"
                     },
                     "400": {
                         "description": "Produto não encontrado."
                     },
                     "401": {
                         "description": "Não  autorizado "
+                    },
+                    "400 ": {
+                        "description": "O produto não pode ser excluído pois está presente em um pedido."
                     },
                     "500": {
                         "description": "Erro interno do servidor."
@@ -573,6 +584,238 @@
                     }
                 }
             }
+        },
+        "/pedido": {
+            "post": {
+                "tags": [
+                    "Pedido"
+                ],
+                "summary": "Endpoint será utilizado para cadastrar um novo pedido no sistema.",
+                "description": "Este endpoint é responsável por cadastra um novo pedido no sistema levando em consideração o id apropiado da categoria ao mesmo.",
+                "security": {
+                    "bearerAuth": []
+                },
+                "requestBody": {
+                    "description": "Objeto com as informações do produto",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Pedido"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "(created)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NovoPedido"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "O id do cliente é um campo obrigatório"
+                    },
+                    " 400": {
+                        "description": "O id do produto é um campo obrigatório"
+                    },
+                    "400 ": {
+                        "description": "A quantidade do  produto é um campo obrigatório"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado na banco de dados "
+                    },
+                    "400  ": {
+                        "description": "A quantidade de produto solicitada está acima do volume em estoque",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProdutoSemEstoque"
+                                }
+                            }
+                        }
+                    },
+                    "404  ": {
+                        "description": "Produto não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProdutoNaoEncontrado"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não  autorizado "
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
+        },
+        "/pedido?cliente_id": {
+            "get": {
+                "tags": [
+                    "Pedido"
+                ],
+                "summary": "Endpoint para listar as informações de um pedido cadastrado por cliente no sistema. ",
+                "security": {
+                    "bearerAuth": []
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "cliente_id",
+                        "description": "ID do cliente a ser exibido",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201 ": {
+                        "description": "Lista de pedidos de acordo com o cliente informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListaPedidos"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Lista de todos os produtos pois o cliente não foi informado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pedidos"
+                                }
+                            }
+                        }
+                    },
+                    "200 ": {
+                        "description": "Caso não encontrar nada no banco de dados, retornar um array vazio",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SemInformacoes"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "O usuário não está autenticado"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado no banco de dados"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
+        },
+        "/arquivo/upload": {
+            "post": {
+                "tags": [
+                    "Upload de imagem"
+                ],
+                "summary": "Endpoint para fazer upload de uma imagem no servidor de armazenamento",
+                "description": "Cada imagem deverá ter um nome gerado exclusivo",
+                "security": {
+                    "bearerAuth": []
+                },
+                "requestBody": {
+                    "description": "Arquivo de imagem",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "format": "string",
+                                "example": "arquivo:imagem.jpge.js.org/chokidar/-/chokidar-3.5.3.tgz"
+                            }
+                        }
+                    }
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Caso o upload tenha sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Retornoimagens"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "A seleção de uma imagem é obrigatória"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
+        },
+        "/arquivo": {
+            "get": {
+                "tags": [
+                    "Upload de imagem"
+                ],
+                "summary": "Essa é a rota que será utilizada para obter a URL de todas imagens no servidor de armazenamento.",
+                "description": "Retorna a URL de todas imagens armazenadas",
+                "security": {
+                    "bearerAuth": []
+                },
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de URL de imagens",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/imagens"
+                                }
+                            }
+                        }
+                    },
+                    "200 ": {
+                        "description": "Caso não tenha arquivo no banco de dados.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SemInformacoes"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "O usuário não está autenticado"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor."
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -693,6 +936,10 @@
                     "categoria_id": {
                         "type": "string",
                         "example": "3"
+                    },
+                    "produto_imagem": {
+                        "type": "string",
+                        "example": "null"
                     }
                 }
             },
@@ -718,6 +965,39 @@
                     "categoria_id": {
                         "type": "string",
                         "example": "3"
+                    },
+                    "produto_imagem": {
+                        "type": "string",
+                        "example": "null"
+                    }
+                }
+            },
+            "ListaProdutos": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": "23"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "example": "Teclado"
+                    },
+                    "quantidade_estoque": {
+                        "type": "string",
+                        "example": "12"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "3000"
+                    },
+                    "categoria_id": {
+                        "type": "string",
+                        "example": "3"
+                    },
+                    "produto_imagem": {
+                        "type": "string",
+                        "example": "null"
                     }
                 }
             },
@@ -804,6 +1084,332 @@
                     "estado": {
                         "type": "string",
                         "example": "SP"
+                    }
+                }
+            },
+            "imagens": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "url: 'http://example.com/imagem1.jpg'"
+                    },
+                    "diretorio": {
+                        "type": "string",
+                        "example": "'/imagens/imagem2.jpg',"
+                    }
+                }
+            },
+            "Retornoimagens": {
+                "type": "object",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "url: 'http://example.com/imagem1.jpg'"
+                    }
+                }
+            },
+            "Pedido": {
+                "type": "object",
+                "properties": {
+                    "cliente_id": {
+                        "type": "string",
+                        "example": "2"
+                    },
+                    "Observacao": {
+                        "type": "string",
+                        "example": "Em caso de ausência recomendo deixar com algum vizinho"
+                    },
+                    "pedidos_produtos": {
+                        "type": "objetc",
+                        "required": [
+                            {
+                                "produto_id": "1",
+                                "quantidade_produto": "10"
+                            }
+                        ]
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "3000"
+                    }
+                }
+            },
+            "NovoPedido": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "cliente_id": {
+                        "type": "string",
+                        "example": "3"
+                    },
+                    "observacao": {
+                        "type": "string",
+                        "example": "Em caso de ausência recomendo deixar com algum vizinho"
+                    },
+                    "valor_total": {
+                        "type": "string",
+                        "example": "230000"
+                    }
+                }
+            },
+            "ProdutoSemEstoque": {
+                "type": "object",
+                "properties": {
+                    "mensagem": {
+                        "type": "string",
+                        "example": "A quantidade de produto solicitada está acima do volume em estoque"
+                    },
+                    "produto_id": {
+                        "type": "string",
+                        "example": "3"
+                    },
+                    "quantidade_estoque": {
+                        "type": "string",
+                        "example": "0"
+                    }
+                }
+            },
+            "ProdutoNaoEncontrado": {
+                "type": "object",
+                "properties": {
+                    "mensagem": {
+                        "type": "string",
+                        "example": "produto não encontrado"
+                    },
+                    "produto_id": {
+                        "type": "string",
+                        "example": "3"
+                    }
+                }
+            },
+            "ListaPedidos": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "pedido": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "1"
+                                },
+                                "valor_total": {
+                                    "type": "number",
+                                    "example": "230000"
+                                },
+                                "observacao": {
+                                    "type": "string",
+                                    "example": "null"
+                                },
+                                "cliente_id": {
+                                    "type": "string",
+                                    "example": "2"
+                                }
+                            }
+                        },
+                        "pedido_produtos": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "quantidade_produto": {
+                                        "type": "string",
+                                        "example": "10"
+                                    },
+                                    "valor_produto": {
+                                        "type": "number",
+                                        "example": "10"
+                                    },
+                                    "pedido_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "produto_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                }
+                            }
+                        },
+                        "pedido_produtos ": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "2"
+                                    },
+                                    "quantidade_produto": {
+                                        "type": "string",
+                                        "example": "2"
+                                    },
+                                    "valor_produto": {
+                                        "type": "number",
+                                        "example": "230000"
+                                    },
+                                    "pedido_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "produto_id": {
+                                        "type": "string",
+                                        "example": "2"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Pedidos": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "pedido": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "1"
+                                },
+                                "valor_total": {
+                                    "type": "number",
+                                    "example": "230000"
+                                },
+                                "observacao": {
+                                    "type": "string",
+                                    "example": "null"
+                                },
+                                "cliente_id": {
+                                    "type": "string",
+                                    "example": "2"
+                                }
+                            }
+                        },
+                        "pedido_produtos": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "quantidade_produto": {
+                                        "type": "string",
+                                        "example": "10"
+                                    },
+                                    "valor_produto": {
+                                        "type": "number",
+                                        "example": "10"
+                                    },
+                                    "pedido_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "produto_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                }
+                            }
+                        },
+                        "pedido_produtos ": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "2"
+                                    },
+                                    "quantidade_produto": {
+                                        "type": "string",
+                                        "example": "2"
+                                    },
+                                    "valor_produto": {
+                                        "type": "number",
+                                        "example": "230000"
+                                    },
+                                    "pedido_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "produto_id": {
+                                        "type": "string",
+                                        "example": "2"
+                                    }
+                                }
+                            }
+                        },
+                        "pedido ": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "string",
+                                    "example": "2"
+                                },
+                                "valor_total": {
+                                    "type": "number",
+                                    "example": "250000"
+                                },
+                                "observacao": {
+                                    "type": "string",
+                                    "example": "Entregar na casa ao lado"
+                                },
+                                "cliente_id": {
+                                    "type": "string",
+                                    "example": "3"
+                                }
+                            }
+                        },
+                        " pedido_produtos": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    },
+                                    "quantidade_produto": {
+                                        "type": "string",
+                                        "example": "12"
+                                    },
+                                    "valor_produto": {
+                                        "type": "number",
+                                        "example": "250000"
+                                    },
+                                    "pedido_id": {
+                                        "type": "string",
+                                        "example": "12"
+                                    },
+                                    "produto_id": {
+                                        "type": "string",
+                                        "example": "21"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SemInformacoes": {
+                "type": "object",
+                "properties": {
+                    "[]": {
+                        "type": "array"
                     }
                 }
             }
