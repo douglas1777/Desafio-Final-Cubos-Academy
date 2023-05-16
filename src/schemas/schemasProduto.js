@@ -9,6 +9,7 @@ const validacaoCamposProduto = validate((schemas) => {
             quantidade_estoque: yup.number().integer().positive().required(),
             valor: yup.number().integer().positive().required(),
             categoria_id: yup.number().integer().positive().required(),
+            produto_imagem: yup.string().strict(true).optional()
         })
     )
 })

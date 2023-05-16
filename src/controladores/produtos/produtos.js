@@ -2,14 +2,29 @@ const { StatusCodes } = require('http-status-codes')
 
 const msg = require('../../utils/msgErros')
 const { repos } = require('../../repositorios')
+const { verificaUrl, apagaImagem } = require('../../utils/validaImagem')
+const { consultaProdutoFoiPedido } = require('../../repositorios/pedidos')
 
 const cadastrarProduto = async (req, res) => {
-  const { categoria_id } = req.body
+  const { env } = process
+  const { categoria_id, produto_imagem } = req.body
 
   const categoria = await repos.verificarCategoriaExiste(categoria_id)
 
   if (!categoria) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_categoria_nao_encontrada)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_categoria_nao_encontrada)
+  }
+
+  if (produto_imagem) {
+    const imagemExiste = await verificaUrl(produto_imagem)
+
+    if (!imagemExiste) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json(msg.erro_imagem_nao_encontrada)
+    }
   }
 
   const produto = await repos.salvarProduto(req.body)
@@ -35,7 +50,9 @@ const listarProdutos = async (req, res) => {
   const produtos = await repos.detalharProdutos(categoriaQuery)
 
   if (!produtos[0]) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_produto_nao_encontrado)
   }
 
   res.status(StatusCodes.OK).json(produtos)
@@ -43,22 +60,38 @@ const listarProdutos = async (req, res) => {
 
 const editarProduto = async (req, res) => {
   const { id } = req.params
-
+  let { produto_imagem } = req.body
   const { categoria_id } = req.body
 
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_produto_nao_encontrado)
   }
 
   const categoria = await repos.verificarCategoriaExiste(categoria_id)
 
   if (!categoria) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_categoria_nao_encontrada)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_categoria_nao_encontrada)
+  }
+  
+  if (!produto_imagem) {
+    produto_imagem = null
+  }else {
+    const imagemExiste = await verificaUrl(produto_imagem)
+
+    if (!imagemExiste) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json(msg.erro_imagem_nao_encontrada)
+    }
   }
 
-  await repos.atualizarProduto(req.body, id)
+  await repos.atualizarProduto({ ...req.body, produto_imagem }, id)
 
   res.status(StatusCodes.NO_CONTENT).send()
 }
@@ -69,7 +102,9 @@ const detalharProduto = async (req, res) => {
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_produto_nao_encontrado)
   }
 
   res.status(StatusCodes.OK).json(produto)
@@ -81,7 +116,25 @@ const excluirProduto = async (req, res) => {
   const produto = await repos.verificarProdutoExiste(id)
 
   if (!produto) {
-    return res.status(StatusCodes.NOT_FOUND).json(msg.erro_produto_nao_encontrado)
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json(msg.erro_produto_nao_encontrado)
+  }
+
+  const produtoPedido = await consultaProdutoFoiPedido('pedidos', id )
+
+  if (produtoPedido) {
+    return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_categoria_nao_encontrada)
+  }
+
+  if (produto.produto_imagem) {
+    const apagaImagemServidor = await apagaImagem(produto.produto_imagem)
+
+    if (apagaImagemServidor instanceof Error) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json(msg.erro_imagem_nao_encontrada)
+    }
   }
 
   await repos.deletarProduto(id)

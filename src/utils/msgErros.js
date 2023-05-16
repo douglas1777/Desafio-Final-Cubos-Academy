@@ -9,8 +9,12 @@ module.exports = {
   erro_cliente_nao_encontrado: { mensagem: 'Cliente não encontrado' },
   erro_categoria_nao_encontrada: { mensagem: 'Categoria não encontrada' },
   erro_produto_nao_encontrado: { mensagem: 'Produto não encontrado' },
+  erro_produto_pedido: { mensagem: 'O produto não pode ser excluído pois está presente em um pedido' },
   erro_sem_estoque: {
     mensagem:
       'A quantidade de produto solicitada está acima do volume em estoque',
   },
+  erro_imagem_nao_encontrada: {
+    mensagem: 'A imagem não foi encontrada'
+  }
 }
