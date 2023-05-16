@@ -39,8 +39,11 @@ const listasPedidos = async (tabela, cliente_id) => {
       .join('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
       .orderBy('id', 'asc')
 
-    return pedidos
+      return pedidos
+    }
   }
-}
+  const consultaProdutoFoiPedido = async (tabela, pedido_id) => {
+    return await knex(tabela).where({ pedido_id }).first()
+  }
 
-module.exports = { salvarPedido, listasPedidos }
+module.exports = { salvarPedido, listasPedidos, consultaProdutoFoiPedido }
