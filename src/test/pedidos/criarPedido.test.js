@@ -8,7 +8,7 @@ const criaClienteRepetido = {
     cpf: '12345668804',
 }
 
-describe('Criar pedido', () => {
+describe('Criar cliente', () => {
     beforeAll(async () => {
         const { body } = await testServer
             .post('/usuario')
@@ -27,11 +27,11 @@ describe('Criar pedido', () => {
             pedido_produtos: [
                 {
                     produto_id: 1,
-                    quantidade_produto: 1,
+                    quantidade_produto: 10,
                 },
                 {
                     produto_id: 2,
-                    quantidade_produto: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -52,11 +52,11 @@ describe('Criar pedido', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    quantidade_produto: 1,
+                    quantidade_produto: 10,
                 },
                 {
                     produto_id: 2,
-                    quantidade_produto: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -81,7 +81,7 @@ describe('Criar pedido', () => {
                 },
                 {
                     produto_id: 2,
-                    quantidade_produto: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -102,12 +102,12 @@ describe('Criar pedido', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 3,
-                    quantidade_produto: 1,
+                    produto_id: 1,
+                    quantidade_produto: 10,
                 },
                 {
-                    produto_id: 9,
-                    quantidade_produto: 2,
+                    produto_id: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -129,11 +129,11 @@ describe('Criar pedido', () => {
             pedido_produtos: [
                 {
                     produto_id: 999,
-                    quantidade_produto: 1,
+                    quantidade_produto: 10,
                 },
                 {
                     produto_id: 2,
-                    quantidade_produto: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -154,11 +154,11 @@ describe('Criar pedido', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 3,
+                    produto_id: 1,
                     quantidade_produto: 100000,
                 },
                 {
-                    produto_id: 9,
+                    produto_id: 2,
                     quantidade_produto: 20,
                 },
             ],
@@ -180,12 +180,12 @@ describe('Criar pedido', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 3,
-                    quantidade_produto: 1,
+                    produto_id: 1,
+                    quantidade_produto: 10,
                 },
                 {
-                    produto_id: 9,
-                    quantidade_produto: 2,
+                    produto_id: 2,
+                    quantidade_produto: 20,
                 },
             ],
         };
@@ -195,7 +195,7 @@ describe('Criar pedido', () => {
             .set('Authorization', token)
             .send(pedido);
 
-        expect(response.statusCode).toEqual(StatusCodes.CREATED);
+        expect(response.statusCode).toEqual(StatusCodes.OK);
         expect(response.body).toHaveProperty('id');
         expect(response.body).toHaveProperty('cliente_id');
         expect(response.body).toHaveProperty('observacao');
