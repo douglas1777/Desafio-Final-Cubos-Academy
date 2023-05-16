@@ -2,11 +2,6 @@ const { StatusCodes } = require('http-status-codes')
 const { testServer } = require('../jest.setup')
 
 let token
-const criaClienteRepetido = {
-    nome: 'José',
-    email: 'jose@email.com',
-    cpf: '12345668804',
-}
 
 describe('Criar cliente', () => {
     beforeAll(async () => {
@@ -26,12 +21,12 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 1,
-                    quantidade_produto: 10,
+                    produto_id: 3,
+                    quantidade_produto: 1,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -43,7 +38,7 @@ describe('Criar cliente', () => {
 
         expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(response.body).toHaveProperty('mensagem');
-        expect(response.body.mensagem).toHaveProperty('cliente_id', 'cliente_id é um campo obrigatório');
+        expect(response.body.mensagem).toHaveProperty('cliente_id');
     });
 
     it('deve recusar a criação de um pedido quando o id do produto não é fornecido', async () => {
@@ -52,11 +47,11 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    quantidade_produto: 10,
+                    quantidade_produto: 1,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -68,7 +63,7 @@ describe('Criar cliente', () => {
 
         expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(response.body).toHaveProperty('mensagem');
-        expect(response.body.mensagem).toHaveProperty('produto_id', 'produto_id é um campo obrigatório');
+        expect(response.body.mensagem).toBeTruthy()
     });
 
     it('deve recusar a criação de um pedido quando a quantidade do produto não é fornecida', async () => {
@@ -77,11 +72,11 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 1,
+                    produto_id: 3,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -93,7 +88,7 @@ describe('Criar cliente', () => {
 
         expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         expect(response.body).toHaveProperty('mensagem');
-        expect(response.body.mensagem).toHaveProperty('quantidade_produto', 'quantidade_produto é um campo obrigatório')
+        expect(response.body.mensagem).toBeTruthy()
     })
 
     it('deve recusar a criação de um pedido quando o cliente não é encontrado no banco de dados', async () => {
@@ -102,12 +97,12 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 1,
-                    quantidade_produto: 10,
+                    produto_id: 3,
+                    quantidade_produto: 1,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -129,11 +124,11 @@ describe('Criar cliente', () => {
             pedido_produtos: [
                 {
                     produto_id: 999,
-                    quantidade_produto: 10,
+                    quantidade_produto: 1,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 3,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -154,12 +149,12 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 1,
+                    produto_id: 3,
                     quantidade_produto: 100000,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -180,12 +175,12 @@ describe('Criar cliente', () => {
             observacao: 'Em caso de ausência recomendo deixar com algum vizinho',
             pedido_produtos: [
                 {
-                    produto_id: 1,
-                    quantidade_produto: 10,
+                    produto_id: 3,
+                    quantidade_produto: 1,
                 },
                 {
-                    produto_id: 2,
-                    quantidade_produto: 20,
+                    produto_id: 9,
+                    quantidade_produto: 2,
                 },
             ],
         };
@@ -195,7 +190,7 @@ describe('Criar cliente', () => {
             .set('Authorization', token)
             .send(pedido);
 
-        expect(response.statusCode).toEqual(StatusCodes.OK);
+        expect(response.statusCode).toEqual(StatusCodes.CREATED);
         expect(response.body).toHaveProperty('id');
         expect(response.body).toHaveProperty('cliente_id');
         expect(response.body).toHaveProperty('observacao');

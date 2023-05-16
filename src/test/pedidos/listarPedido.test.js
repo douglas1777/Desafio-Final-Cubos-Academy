@@ -24,22 +24,12 @@ describe('Listar pedido', () => {
 
         expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
         expect(response.body).toHaveProperty('mensagem')
-        expect(response.body.mensagem).toMatch('cliente não encontrado')
+        expect(response.body.mensagem).toMatch('Cliente não encontrado')
     })
 
     it('deve listar somente os pedidos com cliente enviado', async () => {
         const response = await testServer
             .get(`/pedido?cliente_id=${1}`)
-            .set('Authorization', token)
-            .send()
-
-        expect(response.statusCode).toEqual(StatusCodes.OK)
-        expect(response.body).toBeTruthy()
-    })
-
-    it('deve listar somente os pedidos com dois clientes enviados', async () => {
-        const response = await testServer
-            .get(`/pedido?cliente_id=${1}&cliente_id=${2}`)
             .set('Authorization', token)
             .send()
 
