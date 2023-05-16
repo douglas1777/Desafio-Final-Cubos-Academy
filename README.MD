@@ -370,9 +370,9 @@ Exemplos de resposta:
 {
     "id": 1,
     "descricao": "Teclado",
-    "quantidade_estoque": "04",
+    "quantidade_estoque": "4",
     "valor": "3000"
-    "categoria_id":"01"
+    "categoria_id":"1"
     "produto_imagem": <arquivo_da_imagem>
 }
 ```
@@ -579,6 +579,8 @@ Essa é a rota que permite listar as informações dos produtos cadastrados por 
     "quantidade_estoque": "4",
     "valor": "3000"
     "categoria_id":"1"
+    "produto_imagem":"null"
+
    
 },{
     "id":"2"
@@ -586,6 +588,7 @@ Essa é a rota que permite listar as informações dos produtos cadastrados por 
     "quantidade_estoque": "2",
     "valor": "1000"
     "categoria_id":"1"
+    "produto_imagem":"url: 'http://example.com/imagem1.jpg'"
    
 }
 ];
@@ -619,6 +622,7 @@ Caso não encontrar nada no banco de dados, retornar um array vazio
     "quantidade_estoque": "4",
     "valor": "3000"
     "categoria_id":"1"
+     "produto_imagem":"url: 'http://example.com/imagem1.jpg'"
    
 },{
     "id":"2"
@@ -626,6 +630,7 @@ Caso não encontrar nada no banco de dados, retornar um array vazio
     "quantidade_estoque": "2",
     "valor": "1000"
     "categoria_id":"1"
+     "produto_imagem":"url: 'http://example.com/imagem2.jpg'"
    
 }, {
     "id":"3"
@@ -633,6 +638,7 @@ Caso não encontrar nada no banco de dados, retornar um array vazio
     "quantidade_estoque": "1",
     "valor": "55000"
     "categoria_id":"2"
+     "produto_imagem":"url: 'http://example.com/imagem3.jpg'"
    
 },{
     "id":"4"
@@ -640,6 +646,7 @@ Caso não encontrar nada no banco de dados, retornar um array vazio
     "quantidade_estoque": "15",
     "valor": "800"
     "categoria_id":"3"
+     "produto_imagem":"null"
    
 }
 ];
@@ -683,6 +690,7 @@ Essa é a rota que será chamada quando o usuario logado quiser obter um de seus
     "quantidade_estoque": "2",
     "valor": "1000"
     "categoria_id":"1"
+    "produto_imagem":"url: 'http://example.com/imagem1.jpg'"
    
 }
 ```
@@ -705,7 +713,7 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
 
 -   **Requisição**  
     - Deverá ser enviado o ID do produto a ser deletado no parâmetro de rota do endpoint.  
-    -O corpo (body) da requisição não deverá possuir nenhum conteúdo.
+    - O corpo (body) da requisição não deverá possuir nenhum conteúdo.
     -Deverá ser aplicada uma regra de negócio que não permitirá exclusão de produto que tenha sido registrado em algum pedido.
     - Na exclusão do produto a imagem vinculada a este produto deverá ser excluída do servidor de armazenamento.
 
@@ -715,7 +723,7 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
 
 -   **REQUISITOS OBRIGATÓRIOS**
 
-    -Validar se existe produto para o id enviado como parâmetro na rota.
+    - Validar se existe produto para o id enviado como parâmetro na rota.
     - Validar se o produto que está sendo excluído não está vinculado a nenhum pedido, caso estiver, não poderá ser excluido,
 
 ### **Exemplo de requisição**
@@ -728,10 +736,8 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
 ### **Exemplos de resposta**
 
 ```javascript
-// HTTP Status 200 (OK) = requisição bem sucedida
-{
-    "mensagem": "Produto excluido com sucesso."
-}
+// HTTP Status 204 (no content) 
+
 ```
 
 ```javascript
@@ -740,6 +746,13 @@ Essa é a rota que será chamada quando o usuario logado quiser deletar um de se
     "mensagem": "Produto não encontrado."
 }
 ```
+```javascript
+// HTTP Status 400 (Bad Request)
+{
+    "mensagem": "O produto não pode ser excluído pois está presente em um pedido."
+}
+```
+
 <br><br>
 
 # **Cadastrar Cliente**
@@ -1466,10 +1479,8 @@ Essa é a rota que será utilizada para obter a URL de todas imagens no servidor
 **Exemplo de requisição**
 
 ```javascript
-// POST /arquivo
-
-
-    
+// GET /arquivo
+   
 ```
 
 **Exemplos de resposta**
@@ -1518,7 +1529,7 @@ Deverá ser aplicada uma regra de negócio que não permitirá exclusão de prod
 
 "Critérios de aceite:"
 
-- Validar se o produto que está sendo excluído não está vinculado a nenhum pedido, caso estiver, não poderá ser 
+-  Validar se o produto que está sendo excluído não está vinculado a nenhum pedido, caso estiver, não poderá ser 
 ```
 
 ```javascript
