@@ -20,7 +20,6 @@ rotas.use(validarToken)
 rotas.use('/cliente', rotasClientes)
 rotas.use('/produto', rotasProdutos)
 rotas.use('/pedido', rotasPedidos)
-rotas.use('/upload', rotasUpload)
 rotas.use('/arquivo', rotasUpload)
 rotas.use(erros)
 
