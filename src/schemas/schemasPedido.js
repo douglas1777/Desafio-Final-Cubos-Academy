@@ -10,9 +10,9 @@ const validacaoCamposPedido = validate((schemas) => {
       pedido_produtos: yup.array().of(
         yup.object({
           produto_id: yup.number().integer().required(),
-          quantidade_produto: yup.number().integer().required()
+          quantidade_produto: yup.number().integer().moreThan(0).required()
         })
-      ),
+      ).required(),
     })
   )
 })
