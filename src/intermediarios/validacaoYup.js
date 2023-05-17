@@ -2,9 +2,10 @@ const yup = require('yup')
 const { pt } = require('yup-locales')
 yup.setLocale(pt)
 
-const errosYup = {}
 
 const validate = (schemas) => (req, res, next) => {
+  const errosYup = {}
+  
   const schema = schemas((schema) => schema)
   try {
     schema.validateSync(req.body, { abortEarly: false })

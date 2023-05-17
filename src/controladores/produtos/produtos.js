@@ -3,10 +3,8 @@ const { StatusCodes } = require('http-status-codes')
 const msg = require('../../utils/msgErros')
 const { repos } = require('../../repositorios')
 const { verificaUrl, apagaImagem } = require('../../utils/validaImagem')
-const { consultaProdutoFoiPedido } = require('../../repositorios/pedidos')
 
 const cadastrarProduto = async (req, res) => {
-  const { env } = process
   const { categoria_id, produto_imagem } = req.body
 
   const categoria = await repos.verificarCategoriaExiste(categoria_id)
@@ -19,7 +17,7 @@ const cadastrarProduto = async (req, res) => {
 
   if (produto_imagem) {
     const path = produto_imagem.split('/')
-    
+
     const imagemExiste = await verificaUrl(
       produto_imagem,
       path[path.length - 2]
@@ -83,10 +81,10 @@ const editarProduto = async (req, res) => {
       .status(StatusCodes.NOT_FOUND)
       .json(msg.erro_categoria_nao_encontrada)
   }
-  
+
   if (!produto_imagem) {
     produto_imagem = null
-  }else {
+  } else {
     const imagemExiste = await verificaUrl(produto_imagem)
 
     if (!imagemExiste) {
@@ -126,7 +124,10 @@ const excluirProduto = async (req, res) => {
       .json(msg.erro_produto_nao_encontrado)
   }
 
-  const produtoPedido = await consultaProdutoFoiPedido('pedido_produtos', id )
+  const produtoPedido = await repos.consultaProdutoFoiPedido(
+    'pedido_produtos',
+    id
+  )
 
   if (produtoPedido) {
     return res.status(StatusCodes.BAD_REQUEST).json(msg.erro_produto_pedido)

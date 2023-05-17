@@ -1,12 +1,12 @@
 const { StatusCodes } = require('http-status-codes')
 
 const { uploadImagem, getImagem } = require('../../services/servidorImagem')
+const msg = require('../../utils/msgErros')
 const endpoint = process.env.API_BUCKET_ENDPOINT
-
 
 const upload = async (req, res) => {
   const { buffer, mimetype } = req.file
-
+  
   const urlImagem = await uploadImagem(
     process.env.API_BUCKET_NOME,
     'produtos',
