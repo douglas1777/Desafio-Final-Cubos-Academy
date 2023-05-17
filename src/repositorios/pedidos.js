@@ -4,48 +4,29 @@ const salvarPedido = async (tabela, dados) => {
   const [novoItemInserido] = await knex(tabela).insert(dados).returning('*')
   return novoItemInserido
 }
+
 const listasPedidos = async (tabela, cliente_id) => {
-  if (cliente_id) {
-    const pedidos = await knex(tabela)
-      .select(
-        'pedidos.id',
-        'pedidos.valor_total',
-        'pedidos.observacao',
-        'pedidos.cliente_id',
-        'pedido_produtos.id AS pedido_produtos.id',
-        'pedido_produtos.quantidade_produto',
-        'pedido_produtos.valor_produto',
-        'pedido_produtos.pedido_id',
-        'pedido_produtos.produto_id'
-      )
-      .where('cliente_id', cliente_id)
-      .join('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
-      .orderBy('id', 'asc')
+  const pedidos = knex(tabela).select(
+    'pedidos.*',
+    'p.id AS pedido_produtos.id',
+    'p.quantidade_produto',
+    'p.valor_produto',
+    'p.pedido_id',
+    'p.produto_id'
+  )
 
-    return pedidos
-  } else {
-    const pedidos = await knex(tabela)
-      .select(
-        'pedidos.id',
-        'pedidos.valor_total',
-        'pedidos.observacao',
-        'pedidos.cliente_id',
-        'pedido_produtos.id AS pedido_produtos.id',
-        'pedido_produtos.quantidade_produto',
-        'pedido_produtos.valor_produto',
-        'pedido_produtos.pedido_id',
-        'pedido_produtos.produto_id'
-      )
-      .join('pedido_produtos', 'pedidos.id', 'pedido_produtos.pedido_id')
-      .orderBy('id', 'asc')
+  if (cliente_id) pedidos.where('cliente_id', cliente_id)
 
+  pedidos
+    .join('pedido_produtos as p', 'pedidos.id', 'p.pedido_id')
+    .orderBy('pedidos.id', 'asc')
+    .then((response) => response)
 
-    return pedidos
-  }
+  return await pedidos
 }
 
-const consultaProdutoFoiPedido = async (tabela, pedido_id) => {
-  return await knex(tabela).where({ pedido_id }).first()
+const consultaProdutoFoiPedido = async (tabela, id) => {
+  return await knex(tabela).where({ id }).first()
 }
 
 module.exports = { salvarPedido, listasPedidos, consultaProdutoFoiPedido }

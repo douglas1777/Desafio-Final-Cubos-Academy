@@ -7,10 +7,10 @@ const swaggerDocument = require('./swagger.json')
 const { rotas } = require('./rotas')
 
 const app = express()
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use(express.json())
 app.use(rotas)
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+
 
 module.exports = { app }
