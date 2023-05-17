@@ -1,7 +1,9 @@
-const { assign } = require('nodemailer/lib/shared')
-const { uploadImagem, getImagem } = require('../../services/servidorImagem')
 const { StatusCodes } = require('http-status-codes')
+
+const { uploadImagem, getImagem } = require('../../services/servidorImagem')
 const endpoint = process.env.API_BUCKET_ENDPOINT
+
+
 const upload = async (req, res) => {
   const { buffer, mimetype } = req.file
 
@@ -12,7 +14,7 @@ const upload = async (req, res) => {
     mimetype
   )
 
-  return res.json(urlImagem)
+  return res.status(StatusCodes.CREATED).json(urlImagem)
 }
 const listar = async (req, res) => {
   const imagens = await getImagem(process.env.API_BUCKET_NOME, 'produtos')

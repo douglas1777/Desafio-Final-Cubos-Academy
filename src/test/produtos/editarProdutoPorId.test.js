@@ -4,10 +4,12 @@ const { testServer } = require('../jest.setup')
 let token
 
 const criaProdutoPadrao = {
-  descricao: 'Teclado',
+  descricao: 'Teclado_editado',
   quantidade_estoque: '4',
   valor: '3000',
   categoria_id: '1',
+  produto_imagem:
+    'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/75f534c9-d6a8-4c76-814b-ee8c2d08ca88',
 }
 
 describe('Editar produto', () => {
@@ -35,6 +37,23 @@ describe('Editar produto', () => {
     expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
     expect(response.body).toHaveProperty('mensagem')
     expect(response.body.mensagem).toMatch('Categoria não encontrada')
+  })
+
+  it('deve recusar a edição de um produto por inexistência da imagem no servidor', async () => {
+    const response = await testServer
+      .post('/produto')
+      .set('Authorization', token)
+      .send({
+        descricao: 'Teclado',
+        quantidade_estoque: '4',
+        valor: '3000',
+        categoria_id: '1',
+        produto_imagem: 'imagem_inexistente',
+      })
+
+    expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+    expect(response.body).toHaveProperty('mensagem')
+    expect(response.body.mensagem).toMatch('A imagem não foi encontrada')
   })
 
   it('deve recusar a edição de um produto por inexistência do produto do id informado', async () => {

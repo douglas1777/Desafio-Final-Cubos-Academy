@@ -1,8 +1,8 @@
-const express = require("express");
-const { listarCategorias } = require("../controladores/transacoes/categorias");
+const express = require('express')
+const { listarCategorias } = require('../controladores/categorias/categorias')
 
-const rotas = express.Router();
+const rotas = express.Router()
 
-rotas.get("/", listarCategorias);
+rotas.get('/', listarCategorias)
 
-module.exports = rotas;
+module.exports = rotas

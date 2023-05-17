@@ -3,10 +3,12 @@ const { testServer } = require('../jest.setup')
 
 let token
 const criaProdutoPadrao = {
-  descricao: 'Teclado',
+  descricao: 'Teclado_teste',
   quantidade_estoque: '4',
   valor: '3000',
   categoria_id: '1',
+  produto_imagem:
+    'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/31d313b4-9d0c-4b05-9243-b30a630dd382',
 }
 
 describe('Cadastrar produto', () => {
@@ -20,6 +22,24 @@ describe('Cadastrar produto', () => {
       .send({ email: body.email, senha: '123' })
 
     token = 'bearer ' + logarUsuario.body.token
+  })
+
+  it('deve recusar a criação de um produto por inexistência da imagem no servidor', async () => {
+    const response = await testServer
+      .post('/produto')
+      .set('Authorization', token)
+      .send({
+        descricao: 'Teclado',
+        quantidade_estoque: '4',
+        valor: '3000',
+        categoria_id: '1',
+        produto_imagem:
+          'imagem_inexistente',
+      })
+
+    expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND)
+    expect(response.body).toHaveProperty('mensagem')
+    expect(response.body.mensagem).toMatch('A imagem não foi encontrada')
   })
 
   it('deve recusar a criação de um produto por inexistência da categoria do id informado', async () => {
@@ -90,12 +110,31 @@ describe('Cadastrar produto', () => {
     expect(response.body.mensagem).toHaveProperty('quantidade_estoque')
   })
 
-  it('deve criar um produto', async () => {
+  it('deve criar um produto sem imagem', async () => {
     const produto = {
       descricao: 'Mouse',
       quantidade_estoque: '2',
       valor: '1000',
       categoria_id: '3',
+    }
+
+    const response = await testServer
+      .post('/produto')
+      .set('Authorization', token)
+      .send(produto)
+
+    expect(response.body).toHaveProperty('id')
+    expect(response.statusCode).toEqual(StatusCodes.CREATED)
+  })
+
+  it('deve criar um produto com imagem', async () => {
+    const produto = {
+      descricao: 'Mouse',
+      quantidade_estoque: '2',
+      valor: '1000',
+      categoria_id: '3',
+      produto_imagem:
+        'https://sdioilofaevysatctgzg.supabase.co/storage/v1/object/public/imagem/teste/31d313b4-9d0c-4b05-9243-b30a630dd382',
     }
 
     const response = await testServer

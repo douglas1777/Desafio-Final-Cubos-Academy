@@ -1,7 +1,7 @@
-const knex = require('../../database/config/conexao')
+const { repos } = require("../../repositorios")
 
 const listarCategorias = async (req, res) => {
-  const categorias = await knex('categorias')
+  const categorias = await repos.consultaCategorias('categorias')
   return res.status(200).json(categorias)
 }
 module.exports = { listarCategorias }
