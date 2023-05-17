@@ -20,16 +20,6 @@ exports.uploadImagem = async (bucketNome, path, buffer, tipo) => {
 
   return { url: endpoint + data.path }
 }
-exports.getImagem = async (bucketNome, path) => {
-  const { data, error } = await supabase.storage.from(bucketNome).list(path)
-
-  if (error) {
-    console.log(error)
-    throw new Error()
-  }
-
-  return data
-}
 
 exports.getImagem = async (bucketNome, path) => {
   const { data, error } = await supabase.storage.from(bucketNome).list(path)
