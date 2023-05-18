@@ -83,44 +83,54 @@ const cadastrarPedido = async (req, res) => {
 const listarPedidos = async (req, res) => {
   const { cliente_id } = req.query
   const pedidos = await listasPedidos('pedidos', cliente_id)
-  if (pedidos.length === 0) {
+
+  if (!pedidos[0]) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .json(msg.erro_cliente_nao_encontrado)
   }
-  const resultado = []
-  for (const pedido of pedidos) {
-    const pedidoExistente = resultado.find((p) => p.pedido.id === pedido.id)
-    if (pedidoExistente) {
-      pedidoExistente.pedido_produtos.push({
-        id: pedido['pedido_produtos.id'],
-        quantidade_produto: pedido.quantidade_produto,
-        valor_produto: pedido.valor_produto,
-        pedido_id: pedido.pedido_id,
-        produto_id: pedido.produto_id,
-      })
+
+  const pedidoMontado = {}
+  const pedidosTotais = []
+  pedidos.map((pedido) => {
+    if (pedidoMontado.pedido?.id === pedido.pedido_id) {
+      pedidoMontado.pedido.pedidos_produtos =
+        {
+            id: pedido.pedidos_produtos_id,
+            quantidade_produto: pedido.quantidade_produto,
+            valor_produto: pedido.valor_produto,
+            pedido_id: pedido.pedido_id,
+            produto_id: pedido.produto_id,
+          },
+      
+      pedidosTotais[pedidosTotais.length - 1].pedido.pedidos_produtos.push(pedidoMontado.pedido.pedidos_produtos)
     } else {
-      resultado.push({
+      pedidoMontado.pedido = {
+        id: pedido.pedido_id,
+      }
+      pedidosTotais.push({
         pedido: {
-          id: pedido.id,
-          valor_total: pedido.valor_total,
-          observacao: pedido.observacao,
-          cliente_id: pedido.cliente_id,
-        },
-        pedido_produtos: [
+        id: pedido.pedido_id,
+        valor_total: pedido.valor_total,
+        observacao: pedido.observacao,
+        cliente_id: pedido.cliente_id,
+        pedidos_produtos: [
           {
-            id: pedido['pedido_produtos.id'],
+            id: pedido.pedidos_produtos_id,
             quantidade_produto: pedido.quantidade_produto,
             valor_produto: pedido.valor_produto,
             pedido_id: pedido.pedido_id,
             produto_id: pedido.produto_id,
           },
         ],
+      },
       })
+     
     }
-  }
+    
+  })
 
-  return res.status(StatusCodes.OK).json(resultado)
+  return res.status(StatusCodes.OK).json(pedidosTotais)
 }
 
 module.exports = { cadastrarPedido, listarPedidos }
