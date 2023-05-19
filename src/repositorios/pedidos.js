@@ -6,7 +6,7 @@ const salvarPedido = async (tabela, dados) => {
 }
 
 const listasPedidos = async (tabela, cliente_id) => {
-  const pedidos = knex(tabela).select('pedidos.*', 'p.*')
+  const pedidos = knex(tabela).select('pedidos.*', 'p.*', 'p.id as pedidos_produtos_id')
 
   if (cliente_id) pedidos.where('cliente_id', cliente_id)
 

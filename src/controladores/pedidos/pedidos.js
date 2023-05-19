@@ -5,6 +5,8 @@ const msg = require('../../utils/msgErros')
 const { transportarEmail } = require('../../utils/transportador')
 const { listasPedidos } = require('../../repositorios/pedidos')
 
+const { isEmpty } = require('lodash')
+
 const cadastrarPedido = async (req, res) => {
   const { cliente_id, observacao, pedido_produtos } = req.body
 
@@ -80,47 +82,58 @@ const cadastrarPedido = async (req, res) => {
     .status(StatusCodes.CREATED)
     .json({ ...pedidoSalvo, email_resposta })
 }
+
+
 const listarPedidos = async (req, res) => {
+
   const { cliente_id } = req.query
+
   const pedidos = await listasPedidos('pedidos', cliente_id)
-  if (pedidos.length === 0) {
+
+  if (isEmpty(pedidos)) {
     return res
       .status(StatusCodes.NOT_FOUND)
       .json(msg.erro_cliente_nao_encontrado)
   }
-  const resultado = []
+
+  const resultado = {}
+
   for (const pedido of pedidos) {
-    const pedidoExistente = resultado.find((p) => p.pedido.id === pedido.id)
-    if (pedidoExistente) {
-      pedidoExistente.pedido_produtos.push({
-        id: pedido['pedido_produtos.id'],
-        quantidade_produto: pedido.quantidade_produto,
-        valor_produto: pedido.valor_produto,
-        pedido_id: pedido.pedido_id,
-        produto_id: pedido.produto_id,
-      })
-    } else {
-      resultado.push({
+    const {
+      id,
+      valor_total,
+      observacao,
+      cliente_id,
+      'pedido_produtos.id': pedido_produto_id,
+      quantidade_produto,
+      valor_produto,
+      pedido_id,
+      produto_id,
+    } = pedido
+
+    if (!resultado[id]) {
+      resultado[id] = {
         pedido: {
-          id: pedido.id,
-          valor_total: pedido.valor_total,
-          observacao: pedido.observacao,
-          cliente_id: pedido.cliente_id,
+          id,
+          valor_total,
+          observacao,
+          cliente_id,
         },
-        pedido_produtos: [
-          {
-            id: pedido['pedido_produtos.id'],
-            quantidade_produto: pedido.quantidade_produto,
-            valor_produto: pedido.valor_produto,
-            pedido_id: pedido.pedido_id,
-            produto_id: pedido.produto_id,
-          },
-        ],
-      })
+        pedido_produtos: [],
+      }
     }
+
+    resultado[id].pedido_produtos.push({
+      id: pedido_produto_id,
+      quantidade_produto,
+      valor_produto,
+      pedido_id,
+      produto_id,
+    })
   }
 
-  return res.status(StatusCodes.OK).json(resultado)
+  return res.status(StatusCodes.OK).json(Object.values(resultado))
+
 }
 
 module.exports = { cadastrarPedido, listarPedidos }

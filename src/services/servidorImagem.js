@@ -37,8 +37,8 @@ exports.deleteImagem = async (bucketNome, caminhoImagem) => {
     .from(bucketNome)
     .remove([caminhoImagem])
 
-    if (error) {
-      console.log(error)
-      return error
-    }
+  if (error) {
+    console.log(error)
+    return error
+  }
 }
