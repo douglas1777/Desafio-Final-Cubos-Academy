@@ -15,8 +15,8 @@ const listasPedidos = async (tabela, cliente_id) => {
   return await pedidos
 }
 
-const consultaProdutoFoiPedido = async (tabela, id) => {
-  return await knex(tabela).where({ id }).first()
+const consultaProdutoFoiPedido = async (tabela, produto_id) => {
+  return await knex(tabela).where({ produto_id }).first()
 }
 
 module.exports = { salvarPedido, listasPedidos, consultaProdutoFoiPedido }
